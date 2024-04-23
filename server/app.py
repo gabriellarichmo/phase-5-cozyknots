@@ -3,7 +3,7 @@
 # Standard library imports
 
 # Remote library imports
-from flask import request
+from flask import request, g, session
 from flask_restful import Resource
 
 # Local imports
