@@ -1,0 +1,40 @@
+.navigation{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.navigation {
+  background-color: #f7f5b5; /* Background color of the navigation bar */
+  color: #070707; /* Text color */
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.navbar a {
+  color: #050505;
+  text-decoration: none;
+  margin-right: 20px; /* Adjust the spacing between navigation links */
+}
+
+.navbar a:hover {
+  color: #ccc; /* Color of navigation links on hover */
+}
+
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.container a {
+  color: #000000;
+  text-decoration: none;
+  margin-right: 20px; /* Adjust the spacing between profile and logout links */
+}
+
+.container a:hover {
+  color: #ccc; /* Color of profile and logout links on hover */
+}
