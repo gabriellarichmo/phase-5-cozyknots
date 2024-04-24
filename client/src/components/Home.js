@@ -1,4 +1,4 @@
-// import "./Home.css";
+import "./Home.css";
 // import { useEffect } from "react";
 // import toast from "react-hot-toast";
 // import { useOutletContext } from "react-router-dom";
@@ -17,7 +17,7 @@ function Home() {
 //   }, []);
 
     return (
-        <div>
+        <div className="home-page">
             <>
                 <h1 className="title">
                 Cozy Knots Co.

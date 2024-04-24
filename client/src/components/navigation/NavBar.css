@@ -1,9 +1,9 @@
-.navigation{
+.nav {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.navigation {
-  background-color: #f7f5b5; /* Background color of the navigation bar */
+.nav {
+  background-color: #8faab3; /* Background color of the navigation bar */
   color: #070707; /* Text color */
 }
 

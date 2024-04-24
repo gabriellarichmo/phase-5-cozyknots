@@ -8,7 +8,7 @@ const NavBar = ( ) => {
     return (
         <div>
             <Toaster />
-            <div className="header">
+            <div className="nav">
                 <nav className="navbar">
                     <NavLink to="/">Home</NavLink>
                     <br></br>
