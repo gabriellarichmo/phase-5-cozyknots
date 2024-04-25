@@ -58,6 +58,7 @@ def signup():
         return user_schema.dump(user), 201
     except Exception as e:
         db.session.rollback()
+        # logging.error(f"Error during signup: {e}")
         return {"error": str(e)}, 422
     
 @app.route("/login", methods=["POST"])
