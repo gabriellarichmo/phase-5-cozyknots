@@ -21,7 +21,7 @@ class User(db.Model, SerializerMixin):
     return f"<User {self.id}: {self.name} | {self.username} | {self.email} />"
 
   # Relationships
-  purchases = db.relationship("Purchase", back_populates="users")
+  purchases = db.relationship("Purchase", back_populates="user")
   
   # Association Proxy
   patterns = association_proxy("purchases", "pattern")

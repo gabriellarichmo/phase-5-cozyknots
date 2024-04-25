@@ -7,10 +7,10 @@ from .user import User
 from .pattern import Pattern
 
 class Purchase(db.Model, SerializerMixin):
-    __tablename___ = "purchases"
+    __tablename__ = "purchases"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     pattern_id = db.Column(db.Integer, db.ForeignKey("patterns.id"))
     price = db.Column(db.Float)
     payment_method = db.Column(db.String)
@@ -21,6 +21,7 @@ class Purchase(db.Model, SerializerMixin):
     # Relationships
     user = db.relationship("User", back_populates="purchases")
     pattern = db.relationship("Pattern", back_populates="purchases")
+    # pattern = db.relationship("Pattern", back_populates="purchases", primaryjoin='Pattern.id == Purchase.pattern_id')
 
     # Association Proxy
 

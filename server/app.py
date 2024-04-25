@@ -13,7 +13,7 @@ from models.user import User
 from models.pattern import Pattern
 from models.purchase import Purchase
 from models.category import Category
-# Schemas
+# # Schemas
 from schemas.user_schema import user_schema, users_schema
 # from schemas.pattern_schema import pattern_schema, patterns_schema
 # from schemas.purchase_schema import purchase_schema, purchases_schema
@@ -25,28 +25,28 @@ from schemas.user_schema import user_schema, users_schema
 def index():
     return '<h1>Project Server</h1>'
 
-@app.before_request
-def before_request():
-    path_dict = {"userbyid": User, "patternbyid": Pattern, "purchasebyid": Purchase}
-    if request.endpoint in path_dict:
+# @app.before_request
+# def before_request():
+#     path_dict = {"userbyid": User, "patternbyid": Pattern, "purchasebyid": Purchase}
+#     if request.endpoint in path_dict:
 
-        id = request.view_args.get("id")
-        record = db.session.get(path_dict.get(request.endpoint), id)
-        key_name = "user" if request.endpoint == "userbyid" else "pattern"
-        if request.endpoint == 'purchasebyid':
-            key_name = "purchase"
-        setattr(g, key_name, record)
+#         id = request.view_args.get("id")
+#         record = db.session.get(path_dict.get(request.endpoint), id)
+#         key_name = "user" if request.endpoint == "userbyid" else "pattern"
+#         if request.endpoint == 'purchasebyid':
+#             key_name = "purchase"
+#         setattr(g, key_name, record)
         
 
-def login_required(func):
-    @wraps(func)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return {"message": "You must be logged in!"}, 422
-        return func(*args, **kwargs)
-    return decorated_function
+# def login_required(func):
+#     @wraps(func)
+#     def decorated_function(*args, **kwargs):
+#         if 'user_id' not in session:
+#             return {"message": "You must be logged in!"}, 422
+#         return func(*args, **kwargs)
+#     return decorated_function
 
-#! ALL REGISTRATION RELATED ROUTES
+# #! ALL REGISTRATION RELATED ROUTES
 @app.route("/signup", methods=["POST"])
 def signup():
     try:
@@ -94,79 +94,79 @@ def check_session():
     except Exception as e:
         return {"error": str(e)}, 422
 
-#! ALL PATTERN RELATED ROUTES
-class Patterns(Resource):
-    def get(self):
-        try:
-            pass
-        except Exception as e:
-            return {"error": str(e)}, 400
+# #! ALL PATTERN RELATED ROUTES
+# class Patterns(Resource):
+#     def get(self):
+#         try:
+#             pass
+#         except Exception as e:
+#             return {"error": str(e)}, 400
         
-class PatternById(Resource):
-    def get(self, id):
-        try:
-            pass
-        except Exception as e:
-            return {"error": str(e)}, 400
+# class PatternById(Resource):
+#     def get(self, id):
+#         try:
+#             pass
+#         except Exception as e:
+#             return {"error": str(e)}, 400
         
-    def post(self, id):
-        try:
-            pass
-        except Exception as e:
-            return {"error": str(e)}, 400
+#     def post(self, id):
+#         try:
+#             pass
+#         except Exception as e:
+#             return {"error": str(e)}, 400
         
-    def delete(self, id):
-        try:
-            pass
-        except Exception as e:
-            return {"error": str(e)}, 400
+#     def delete(self, id):
+#         try:
+#             pass
+#         except Exception as e:
+#             return {"error": str(e)}, 400
 
-#! ALL USER RELATED ROUTES
-class UserById(Resource):
-    def get(self, id):
-        try:
-            pass
-        except Exception as e:
-            return {"error": str(e)}, 400
+# #! ALL USER RELATED ROUTES
+# class UserById(Resource):
+#     def get(self, id):
+#         try:
+#             pass
+#         except Exception as e:
+#             return {"error": str(e)}, 400
     
-    def patch(self, id):
-        try:
-            pass
-        except Exception as e:
-            return {"error": str(e)}, 400
+#     def patch(self, id):
+#         try:
+#             pass
+#         except Exception as e:
+#             return {"error": str(e)}, 400
             
-    def delete(self, id):
-        try:
-            pass
-        except Exception as e:
-            return {"error": str(e)}, 400
+#     def delete(self, id):
+#         try:
+#             pass
+#         except Exception as e:
+#             return {"error": str(e)}, 400
         
-#! ALL PURCHASE RELATED ROUTES
-class Purchases(Resource):
-    def get(self, id):
-        try:
-            pass
-        except Exception as e:
-            return {"error": str(e)}, 400
+# #! ALL PURCHASE RELATED ROUTES
+# class Purchases(Resource):
+#     def get(self, id):
+#         try:
+#             pass
+#         except Exception as e:
+#             return {"error": str(e)}, 400
     
-    def patch(self, id):
-        try:
-            pass
-        except Exception as e:
-            return {"error": str(e)}, 400
+#     def patch(self, id):
+#         try:
+#             pass
+#         except Exception as e:
+#             return {"error": str(e)}, 400
             
-    def delete(self, id):
-        try:
-            pass
-        except Exception as e:
-            return {"error": str(e)}, 400
+#     def delete(self, id):
+#         try:
+#             pass
+#         except Exception as e:
+#             return {"error": str(e)}, 400
 
 
 
-api.add_resource(Patterns, "/patterns")
-api.add_resource(PatternById, "/patterns/<int:id>")
-api.add_resource(UserById, "/users/<int:id>")
-api.add_resource(Purchases, "/purchases/<int:id>")
+# api.add_resource(Patterns, "/patterns")
+# api.add_resource(PatternById, "/patterns/<int:id>")
+# api.add_resource(UserById, "/users/<int:id>")
+# api.add_resource(Purchases, "/purchases/<int:id>")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

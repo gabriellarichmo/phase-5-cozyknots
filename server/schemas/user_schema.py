@@ -12,7 +12,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         
     patterns = fields.Nested(
         "PatternSchema",
-        only=("id", "name"),
+        only=("id",),
         # exclude=("user",),
     )
     

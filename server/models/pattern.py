@@ -5,7 +5,7 @@ from sqlalchemy.orm import validates
 from config import flask_bcrypt, db
 
 class Pattern(db.Model, SerializerMixin):
-  __tablename___ = "patterns"
+  __tablename__ = "patterns"
 
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(50), nullable=False)
@@ -13,9 +13,9 @@ class Pattern(db.Model, SerializerMixin):
   price = db.Column(db.Float)
   author = db.Column(db.String)
   difficulty = db.Column(db.String)
-  category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
   created_at = db.Column(db.DateTime, server_default=db.func.now())
   updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+  category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 
   def __repr__(self):
     return f"""<Pattern {self.id}: 
@@ -28,7 +28,8 @@ class Pattern(db.Model, SerializerMixin):
                         """
 
   # Relationships
-  purchases = db.relationship('Purchase', back_populates='patterns')
+  # purchases = db.relationship('Purchase', back_populates='pattern', primaryjoin='Pattern.id == Purchase.pattern_id')
+  purchases = db.relationship('Purchase', back_populates='pattern')
   category = db.relationship('Category', back_populates='patterns')
   
   # Association Proxy

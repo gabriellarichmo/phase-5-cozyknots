@@ -5,21 +5,19 @@ from sqlalchemy.orm import validates
 from config import flask_bcrypt, db
 
 class Category(db.Model, SerializerMixin):
-  __tablename___ = "categories"
+    __tablename__ = "categories"
 
-  id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String, nullable=False)
-  description = db.Column(db.String, nullable=False)
-  parent_category = db.Column(db.String)
-  pattern_id = db.Column(db.Integer, db.ForeignKey('patterns.id'))
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=False)
+    parent_category = db.Column(db.String)
 
-  # Relationships
-  patterns = db.relationship('Pattern', back_populates='category')
+    # Relationships
+    patterns = db.relationship('Pattern', back_populates='category')
 
-  # Association Proxy
+    # Association Proxy
 
-  
-  # Serializer Rules
-  
-  
-  # Validations
+    # Serializer Rules
+
+
+    # Validations

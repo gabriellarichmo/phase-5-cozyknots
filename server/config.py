@@ -11,7 +11,7 @@ from os import environ
 
 # Instantiate app, set attributes
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cozyknots.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///cozyknots.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.json.compact = False
 app.secret_key = environ.get("SESSION_SECRET")
@@ -31,4 +31,4 @@ session = Session(app)
 flask_bcrypt = Bcrypt(app)
 
 # Instantiate CORS
-CORS(app)
+# CORS(app)
