@@ -9,21 +9,43 @@ import { UserProvider } from "./user/UserContext";
 import "./App.css"
 import { CartProvider } from "./purchase/CartContext";
 
-function App() {
+// function App() {
 
 
-    return (
-      <UserProvider>
-        <CartProvider>
-          <div className="app">
+//     return (
+//       <UserProvider>
+//         <CartProvider>
+//           <div className="app">
             {/* anything in here will have access to the context */}
-            <NavBar />
+            {/* <NavBar />
             <UserCard />
             <UserDetail />
           </div>
         </CartProvider>
       </UserProvider>
     );
-}
+} */}
 
+function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const updateCurrentUser = (user) => setCurrentUser(user);
+  
+  return (
+    <>
+      <NavBar
+        currentUser={currentUser}
+        updateCurrentUser={updateCurrentUser}
+      />
+      <div>
+        <Toaster />
+      </div>
+      <Outlet
+        context={{
+          currentUser,
+          updateCurrentUser,
+        }}
+      />
+    </>
+  );
+}
 export default App;

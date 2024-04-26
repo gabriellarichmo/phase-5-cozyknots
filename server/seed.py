@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 # Standard library imports
-from random import randint, choice as rc
+import random
+from random import randint
+
 
 # Remote library imports
 from faker import Faker
@@ -20,7 +22,7 @@ if __name__ == '__main__':
         User.query.delete()
         Pattern.query.delete()
         
-        for _ in range(10):  # You can adjust the number of users you want to seed
+        for _ in range(10): 
             username = fake.user_name()
             email = fake.email()
             user = User(
@@ -36,7 +38,24 @@ if __name__ == '__main__':
             
         db.session.commit()
             
+        for _ in range(10):
+            title = fake.text(max_nb_chars=50)
+            description = fake.text(max_nb_chars=250)
+            # price = randint(1, 10)
+            price = round(random.uniform(0, 10), 2)
+            author = fake.name()
+            difficulty = fake.random_element(elements=("Beginner", "Intermediate", "Advanced"))
+            pattern = Pattern(
+                title=title,
+                description=description,
+                price=price,
+                author=author,
+                difficulty=difficulty,
+            )
+            print(f"Adding pattern: {title}, {description}")
+            db.session.add(pattern) 
             
+        db.session.commit()
             
             
     print("Finished seeding...")
