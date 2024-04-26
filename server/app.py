@@ -15,7 +15,7 @@ from models.purchase import Purchase
 from models.category import Category
 # # Schemas
 from schemas.user_schema import user_schema, users_schema
-# from schemas.pattern_schema import pattern_schema, patterns_schema
+from schemas.pattern_schema import pattern_schema, patterns_schema
 # from schemas.purchase_schema import purchase_schema, purchases_schema
 # from schemas.category_schema import category_schema, categories_schema
 
@@ -96,51 +96,91 @@ def check_session():
         return {"error": str(e)}, 422
 
 # #! ALL PATTERN RELATED ROUTES
-# class Patterns(Resource):
-#     def get(self):
-#         try:
-#             pass
-#         except Exception as e:
-#             return {"error": str(e)}, 400
+class Patterns(Resource):
+    def get(self):
+        try:
+            serialized_pattern = patterns_schema.dump(Pattern.query)
+            return serialized_pattern, 200
+        except Exception as e:
+            return {"error": str(e)}, 400
         
-# class PatternById(Resource):
-#     def get(self, id):
-#         try:
-#             pass
-#         except Exception as e:
-#             return {"error": str(e)}, 400
+    def post(self):
+        try:
+            data = (request.json)
+            pattern = pattern_schema.load(data)
+            db.session.add(pattern)
+            db.session.commit()
+            return pattern_schema.dump(pattern), 201
+        except Exception as e:
+            db.session.rollback()
+            return {"error": str(e)}, 422
         
-#     def post(self, id):
-#         try:
-#             pass
-#         except Exception as e:
-#             return {"error": str(e)}, 400
+class PatternById(Resource):
+    def get(self, id):
+        try:
+            return pattern_schema.dump(g.pattern), 200
+        except Exception as e:
+            return {"error": str(e)}, 400
         
-#     def delete(self, id):
-#         try:
-#             pass
-#         except Exception as e:
-#             return {"error": str(e)}, 400
+    def patch(self, id):
+        if g.pattern:
+            try:
+                data = request.json
+                updated_pattern = pattern_schema.load(data, instance=g.pattern, partial=True)
+                db.session.commit()
+                return pattern_schema.dump(updated_pattern), 200
+            except Exception as e:
+                return {"error": str(e)}, 400
+        else:
+            return {"error": f"Pattern {id} not found"}, 404
+            
+    def delete(self, id):
+        if g.pattern:
+            try:
+                db.session.delete(g.pattern)
+                db.session.commit()
+                return {}, 204
+            except Exception as e:
+                db.session.rollback()
+                return {"error": str(e)}, 400
+        else:
+            return {"error": f"Unable to delete pattern {id} at this time."}, 404
 
 # #! ALL USER RELATED ROUTES
-# class UserById(Resource):
-#     def get(self, id):
-#         try:
-#             pass
-#         except Exception as e:
-#             return {"error": str(e)}, 400
+class Users(Resource):
+    def get(self):
+        try:
+            serialized_user = users_schema.dump(User.query)
+            return serialized_user, 200
+        except Exception as e:
+            return {"error": str(e)}, 400
+
+class UserById(Resource):
+    def get(self, id):
+        try:
+            if g.user:
+                return user_schema.dump(g.user), 200
+        except Exception as e:
+            return {"error": str(e)}, 400
     
-#     def patch(self, id):
-#         try:
-#             pass
-#         except Exception as e:
-#             return {"error": str(e)}, 400
+    def patch(self, id):
+        try:
+            if g.user:
+                data = request.json
+                updated_user = user_schema.load(data, instance=g.user, partial=True)
+                db.session.commit()
+                return user_schema.dump(updated_user), 200
+        except Exception as e:
+            return {"error": str(e)}, 400
             
-#     def delete(self, id):
-#         try:
-#             pass
-#         except Exception as e:
-#             return {"error": str(e)}, 400
+    def delete(self, id):
+        try:
+            if g.user:
+                db.session.delete(g.user)
+                db.session.commit()
+                return {}, 204
+        except Exception as e:
+            return {"error": str(e)}, 400
         
 # #! ALL PURCHASE RELATED ROUTES
 # class Purchases(Resource):
@@ -164,9 +204,11 @@ def check_session():
 
 
 
-# api.add_resource(Patterns, "/patterns")
-# api.add_resource(PatternById, "/patterns/<int:id>")
-# api.add_resource(UserById, "/users/<int:id>")
+api.add_resource(Patterns, "/patterns")
+api.add_resource(PatternById, "/patterns/<int:id>")
+api.add_resource(Users, "/users")
+api.add_resource(UserById, "/users/<int:id>")
+
 # api.add_resource(Purchases, "/purchases/<int:id>")
 
 if __name__ == '__main__':

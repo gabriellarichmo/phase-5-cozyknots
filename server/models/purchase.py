@@ -10,11 +10,11 @@ class Purchase(db.Model, SerializerMixin):
     __tablename__ = "purchases"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    pattern_id = db.Column(db.Integer, db.ForeignKey("patterns.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    pattern_id = db.Column(db.Integer, db.ForeignKey("patterns.id"), nullable=False)
     price = db.Column(db.Float)
     payment_method = db.Column(db.String)
-    status = db.Column(db.String)
+    status = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
