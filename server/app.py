@@ -6,7 +6,7 @@
 from flask import request, g, session
 from flask_restful import Resource
 from functools import wraps
-# Local imports
+from werkzeug.security import generate_password_hash
 from config import app, db, api
 # Models
 from models.user import User
@@ -16,7 +16,7 @@ from models.category import Category
 # # Schemas
 from schemas.user_schema import user_schema, users_schema
 from schemas.pattern_schema import pattern_schema, patterns_schema
-# from schemas.purchase_schema import purchase_schema, purchases_schema
+from schemas.purchase_schema import purchase_schema, purchases_schema
 # from schemas.category_schema import category_schema, categories_schema
 
 # Views go here!
@@ -25,30 +25,44 @@ from schemas.pattern_schema import pattern_schema, patterns_schema
 def index():
     return '<h1>Project Server</h1>'
 
-# @app.before_request
-# def before_request():
-#     path_dict = {"userbyid": User, "patternbyid": Pattern, "purchasebyid": Purchase}
-#     if request.endpoint in path_dict:
+@app.before_request
+def before_request():
+    path_dict = {"userbyid": User, "patternbyid": Pattern, "purchasebyid": Purchase}
+    if request.endpoint in path_dict:
 
-#         id = request.view_args.get("id")
-#         record = db.session.get(path_dict.get(request.endpoint), id)
-#         key_name = "user" if request.endpoint == "userbyid" else "pattern"
-#         if request.endpoint == 'purchasebyid':
-#             key_name = "purchase"
-#         setattr(g, key_name, record)
+        id = request.view_args.get("id")
+        record = db.session.get(path_dict.get(request.endpoint), id)
+        key_name = "user" if request.endpoint == "userbyid" else "pattern"
+        if request.endpoint == 'purchasebyid':
+            key_name = "purchase"
+        setattr(g, key_name, record)
         
 
-# def login_required(func):
-#     @wraps(func)
-#     def decorated_function(*args, **kwargs):
-#         if 'user_id' not in session:
-#             return {"message": "You must be logged in!"}, 422
-#         return func(*args, **kwargs)
-#     return decorated_function
+def login_required(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return {"message": "You must be logged in!"}, 422
+        return func(*args, **kwargs)
+    return decorated_function
 
 # #! ALL REGISTRATION RELATED ROUTES
 @app.route("/signup", methods=["POST"])
 def signup():
+    # try:
+    #     data = request.json
+    #     username = data.get("username")
+    #     email = data.get("email")
+    #     password = data.get("password")
+    #     user = User(username=username, email=email)
+    #     user.password_hash = password
+    #     db.session.add(user)
+    #     db.session.commit()
+    #     session["user_id"] = user.id
+    #     return user.to_dict(), 201
+    # except Exception as e:
+    #     db.session.rollback()
+    #     return {"message": str(e)}, 422
     try:
         data = request.json
         user = user_schema.load(data, partial=True)
@@ -63,6 +77,16 @@ def signup():
     
 @app.route("/login", methods=["POST"])
 def login():
+    # try:
+    #     data = request.json 
+    #     user = User.query.filter_by(email=data.get("email")).first()
+    #     if user and user.authenticate(data.get("password")):
+    #         session["user_id"] = user.id
+    #         return user.to_dict(), 200
+    #     else:
+    #         return {"message": "Invalid Credentials"}, 422
+    # except Exception as e:
+    #     return {"message": str(e)}, 422
     try:
         data = request.json
         user = User.query.filter_by(username=data["username"]).first()
@@ -84,16 +108,24 @@ def logout():
         db.session.rollback()
         return {"error": str(e)}, 422
     
-@app.route("/check_session", methods=["GET"])
-def check_session():
+@app.route("/current_user", methods=["GET"])
+def current_user():
     try:
         if "user_id" in session:
             user = db.session.get(User, session.get("user_id"))
-            return user.to_dict(), 200
+            return user_schema.dump(user), 200
         else:
-            return {"message": "Please log in!"}, 400
+            return {"message": "Please log in"}, 400
     except Exception as e:
-        return {"error": str(e)}, 422
+        return {"error": str(e)}
+    # try:
+    #     if "user_id" in session:
+    #         user = db.session.get(User, session.get("user_id"))
+    #         return user_schema.dump(user), 200
+    #     else:
+    #         return {"message": "Please log in!"}, 400
+    # except Exception as e:
+    #     return {"error": str(e)}, 500
 
 # #! ALL PATTERN RELATED ROUTES
 class Patterns(Resource):
@@ -134,17 +166,18 @@ class PatternById(Resource):
         else:
             return {"error": f"Pattern {id} not found"}, 404
             
-    def delete(self, id):
-        if g.pattern:
-            try:
-                db.session.delete(g.pattern)
-                db.session.commit()
-                return {}, 204
-            except Exception as e:
-                db.session.rollback()
-                return {"error": str(e)}, 400
-        else:
-            return {"error": f"Unable to delete pattern {id} at this time."}, 404
+    #! could be problematic - hide pattern from profile instead of deleting from all users that purchased/downloaded
+    # def delete(self, id):
+    #     if g.pattern:
+    #         try:
+    #             db.session.delete(g.pattern)
+    #             db.session.commit()
+    #             return {}, 204
+    #         except Exception as e:
+    #             db.session.rollback()
+    #             return {"error": str(e)}, 400
+    #     else:
+    #         return {"error": f"Unable to delete pattern {id} at this time."}, 404
 
 # #! ALL USER RELATED ROUTES
 class Users(Resource):
@@ -154,6 +187,17 @@ class Users(Resource):
             return serialized_user, 200
         except Exception as e:
             return {"error": str(e)}, 400
+        
+    def post(self):
+        try:
+            data = (request.json)
+            user = user_schema.load(data)
+            db.session.add(user)
+            db.session.commit()
+            return user_schema.dump(user), 201
+        except Exception as e:
+            db.session.rollback()
+            return {"error": str(e)}, 422
 
 class UserById(Resource):
     def get(self, id):
@@ -183,33 +227,47 @@ class UserById(Resource):
             return {"error": str(e)}, 400
         
 # #! ALL PURCHASE RELATED ROUTES
-# class Purchases(Resource):
-#     def get(self, id):
-#         try:
-#             pass
-#         except Exception as e:
-#             return {"error": str(e)}, 400
+class Purchases(Resource):
+    def get(self, id):
+        try:
+            serialized_purchases = purchases_schema.dump(Purchase.query)
+            return serialized_purchases, 200
+        except Exception as e:
+            return {"error": str(e)}, 400
     
-#     def patch(self, id):
-#         try:
-#             pass
-#         except Exception as e:
-#             return {"error": str(e)}, 400
+    #! not needed?
+    # def patch(self, id):
+    #     try:
+    #         pass
+    #     except Exception as e:
+    #         return {"error": str(e)}, 400
             
-#     def delete(self, id):
-#         try:
-#             pass
-#         except Exception as e:
-#             return {"error": str(e)}, 400
+    #! not needed?
+    # def delete(self, id):
+    #     try:
+    #         pass
+    #     except Exception as e:
+    #         return {"error": str(e)}, 400
 
+class PurchaseById(Resource):
+    def get(self, id):
+        try:
+            purchase = Purchase.query.filter_by(pattern_id=id).first()
+            if purchase:
+                confirm_purchase = purchase.pattern.title
+                return {"message": f"You have purchased {confirm_purchase}"}, 200
+            else:
+                return {"error": f"Purchase {id} not found"}, 404
+        except Exception as e:
+            return {"error": str(e)}, 400
 
 
 api.add_resource(Patterns, "/patterns")
 api.add_resource(PatternById, "/patterns/<int:id>")
 api.add_resource(Users, "/users")
 api.add_resource(UserById, "/users/<int:id>")
-
-# api.add_resource(Purchases, "/purchases/<int:id>")
+api.add_resource(Purchases, "/purchases")
+api.add_resource(PurchaseById, "/purchases/<int:id>")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

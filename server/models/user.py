@@ -44,7 +44,7 @@ class User(db.Model, SerializerMixin):
     raise AttributeError("You cannot view password!")
   
   @password_hash.setter
-  def password_hash(self, _, new_password):
+  def password_hash(self, new_password):
     if len(new_password) < 8:
       raise ValueError("Password length is not meeting requirements.")
     hashed_password = flask_bcrypt.generate_password_hash(new_password).decode('utf-8')

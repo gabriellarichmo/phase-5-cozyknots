@@ -4,31 +4,26 @@ import toast, { Toaster } from "react-hot-toast";
 import NavBar from "./navigation/NavBar";
 import Home from "./Home";
 import UserCard from "./user/UserCard";
+import UserDetail from "./user/UserDetail";
+import { UserProvider } from "./user/UserContext";
 import "./App.css"
+import { CartProvider } from "./purchase/CartContext";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null);
-  const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    fetch('/users')
-      .then(resp => resp.json())
-      .then(data => setUsers(data.users))
-      .catch(err => console.error('Error fetching users:', err));
-  }, []);
 
-  const updateCurrentUser = (user) => setCurrentUser(user);
-
-  return (
-    <div className="background">
-      <NavBar currentUser={currentUser} updateCurrentUser={updateCurrentUser} />
-      <div>
-        <Toaster />
-      </div>
-      <Outlet context={{ users, currentUser, setCurrentUser, updateCurrentUser }} />
-    </div>
-  );
+    return (
+      <UserProvider>
+        <CartProvider>
+          <div className="app">
+            {/* anything in here will have access to the context */}
+            <NavBar />
+            <UserCard />
+            <UserDetail />
+          </div>
+        </CartProvider>
+      </UserProvider>
+    );
 }
 
 export default App;

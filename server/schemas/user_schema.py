@@ -3,6 +3,7 @@ import re
 from models.user import User
 from marshmallow import validate, validates, ValidationError, fields, validate, validates_schema
 import logging
+from sqlalchemy import func
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     
@@ -13,6 +14,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         
     patterns = fields.Nested(
         "PatternSchema",
+        many=True,
         only=("id",),
         # exclude=("user",),
     )
@@ -20,9 +22,8 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     purchases = fields.Nested(
         "PurchaseSchema",
         many=True,
-        exclude=("user",),  # Exclude the user field to avoid circular reference
+        exclude=("user",),
         only=("id",),
-        # only=("id", "adopt", "foster", "created_at", "updated_at", "cat_id"),  # Include cat_id
     )
     
     # username = fields.String(required=True, validate=validate.Length(min=2,max=20))
@@ -36,23 +37,28 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
                         error_messages={"required": "Email is required.",
                                         "validate.Email": "Invalid email format."})
     password_hash = fields.String(data_key="password_hash", required=True, 
-                                validate=validate.Length(min=8), load_only=True,
+                                validate=[validate.Length(min=8), validate.Regexp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$',
+                                                        error='Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.')], load_only=True,
                                 error_messages={"required": "Password is required.",
-                                                "validate.Length": "Password must be at least 8 characters long."})
+                                                "validate.Length": "Password must be at least 8 characters long.", 
+                                                "validate.Regexp": "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."})
 
 
 
     @validates_schema
     def validate_email(self, data, **kwargs):
         email = data.get("email")
-        existing_user = User.query.filter_by(email=email).first()
+        existing_user = User.query.filter(func.lower(User.email) == func.lower(email)).first()
         if existing_user:
-            raise ValidationError("Email already exists.") #! EXTRACT ONLY THE STRING
+            raise ValidationError("Inputted email already exists.")
     
     def load(self, data, instance=None, *, partial=False, **kwargs):
         loaded_instance = super().load(
             data, instance=instance, partial=partial, **kwargs
         )
+        for key, value in data.items():
+            # if hasattr(loaded_instance, key):
+            setattr(loaded_instance, key, value)
         return loaded_instance
 
 user_schema = UserSchema()

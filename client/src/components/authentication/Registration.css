@@ -64,6 +64,7 @@ label{
 .swap{
     justify-content: center;
 	display: flex;
+    color: white;
 }
 .button-55 {
     align-self: center;

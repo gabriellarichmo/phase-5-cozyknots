@@ -127,7 +127,7 @@ const Registration = () => {
             />
           </form>
           <div className="swap">
-            <h3>{login ? "Not a member?" : "Cozy Knots Co.!"}</h3>
+            <h3>{login ? "Not a member?" : "Already a member?"}</h3>
             <button
               className="button-55"
               onClick={() => setLogin((currentState) => !currentState)}

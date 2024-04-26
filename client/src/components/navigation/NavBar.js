@@ -15,6 +15,8 @@ const NavBar = ( ) => {
                     <NavLink to="/registration">Login/Sign up</NavLink>
                     <br></br>
                     <NavLink to="/community">Community</NavLink> 
+                    <br></br>
+                    <NavLink to="/cart">My Cart</NavLink>
                 </nav>
             </div>
         </div>

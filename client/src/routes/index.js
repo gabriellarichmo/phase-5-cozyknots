@@ -5,6 +5,11 @@ import Registration from "../components/authentication/Registration";
 import Error from "../components/errors/Error";
 import UserCard from "../components/user/UserCard";
 import Community from "../components/user/Community";
+// import PatternCard from "../components/patterns/PatternCard";
+import NewPatternForm from "../components/pattern/NewPatternForm";
+import PurchaseCard from "../components/purchase/PurchaseCard";
+import MyCart from "../components/purchase/MyCart";
+
 
 export const router = createBrowserRouter([
   {
@@ -22,13 +27,29 @@ export const router = createBrowserRouter([
         element: <Registration />
       },
       {
-        path: "users/:userId",
+        path: "user/:userId",
         element: <UserCard />
       },
       {
         path: "/community",
         element: <Community />
       },
+      // {
+      //   path: "/patterns/:patternId",
+      //   element: <PatternCard />
+      // },
+      {
+        path: "/patterns/new",
+        element: <NewPatternForm />
+      },
+      {
+        path: "/purchases/:purchaseId",
+        element: <PurchaseCard />
+      },
+      {
+        path: "/cart",
+        element: <MyCart />
+      }
     ],
   },
 ]);
