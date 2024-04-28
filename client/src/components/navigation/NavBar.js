@@ -2,25 +2,38 @@ import toast, { Toaster } from "react-hot-toast";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./NavBar.css";
+import { useContext } from "react";
+import { UserContext } from "../user/UserContext";
 
-// const Header = ({ currentUser, handleLogout }) => {
-const NavBar = ( ) => {
+const NavBar = () => {
+    const { currentUser } = useContext(UserContext);
+
     return (
-        <div>
-            <Toaster />
-            <div className="nav">
-                <nav className="navbar">
-                    <NavLink to="/">Home</NavLink>
-                    <br></br>
-                    <NavLink to="/registration">Login/Sign up</NavLink>
-                    <br></br>
-                    <NavLink to="/community">Community</NavLink> 
-                    <br></br>
-                    <NavLink to="/cart">My Cart</NavLink>
-                </nav>
-            </div>
+      <div>
+        <Toaster />
+        <div className="nav">
+          <nav className="navbar">
+            <NavLink to="/">Home</NavLink>
+            <br></br>
+            {!currentUser && (
+              <>
+                <NavLink to="/registration">Login</NavLink>
+                <br></br>
+              </>
+            )}
+            {currentUser && (
+              <>
+                <NavLink to={`/user/${currentUser.id}`}>My Profile</NavLink>
+                <br></br>
+                <NavLink to="/community">Community</NavLink>
+                <br></br>
+                <NavLink to="/cart">My Cart</NavLink>
+              </>
+            )}
+          </nav>
         </div>
-    )
+      </div>
+    );
 };
 
 export default NavBar;

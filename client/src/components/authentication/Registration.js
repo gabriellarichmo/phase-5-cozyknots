@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "./Registration.css";
 import { object, string } from "yup";
-import { useFormik, Formik } from "formik";
+import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../user/UserContext";
 
 const signupSchema = object({
   username: string()
@@ -40,7 +41,7 @@ const Registration = () => {
   const [login, setLogin] = useState(false);
   const requestedUrl = login ? "/login" : "/signup";
   const navigate = useNavigate();
-  const { updateCurrentUser } = useOutletContext();
+  const { setCurrentUser } = useContext(UserContext);
 
   const formik = useFormik({
     initialValues,
@@ -60,8 +61,8 @@ const Registration = () => {
         if (resp.ok) {
           resp
             .json()
-            .then(updateCurrentUser)
-            .then(() => {
+            .then((user) => {
+              setCurrentUser(user);
               navigate("/");
               toast("Cozy Knots Co.", {
                 icon: "🧶",

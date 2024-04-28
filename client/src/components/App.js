@@ -1,51 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { Switch, Route, Outlet, useNavigate } from "react-router-dom";
+import { Route, Routes, Router, useNavigate } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import NavBar from "./navigation/NavBar";
 import Home from "./Home";
 import UserCard from "./user/UserCard";
-import UserDetail from "./user/UserDetail";
-import { UserProvider } from "./user/UserContext";
-import "./App.css"
+// import UserDetail from "./user/UserDetail";
+import { UserProvider, UserContext } from "./user/UserContext";
 import { CartProvider } from "./purchase/CartContext";
-
-// function App() {
-
-
-//     return (
-//       <UserProvider>
-//         <CartProvider>
-//           <div className="app">
-            {/* anything in here will have access to the context */}
-            {/* <NavBar />
-            <UserCard />
-            <UserDetail />
-          </div>
-        </CartProvider>
-      </UserProvider>
-    );
-} */}
+import Registration from "./authentication/Registration";
+import Community from "./user/Community";
+import MyCart from "./purchase/MyCart";
+import "./App.css";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null);
-  const updateCurrentUser = (user) => setCurrentUser(user);
-  
+  const { currentUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/registration");
+    }
+  }, [currentUser, navigate]);
+
   return (
-    <>
-      <NavBar
-        currentUser={currentUser}
-        updateCurrentUser={updateCurrentUser}
-      />
-      <div>
+    <UserProvider>
+      <CartProvider>
         <Toaster />
-      </div>
-      <Outlet
-        context={{
-          currentUser,
-          updateCurrentUser,
-        }}
-      />
-    </>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/cart" element={<MyCart />} />
+          {currentUser && (
+            <Route path={`/user/${currentUser.id}`} element={<UserCard />} />
+          )}
+        </Routes>
+      </CartProvider>
+    </UserProvider>
   );
 }
+
 export default App;
