@@ -12,7 +12,7 @@ const PatternDetail = ({ pattern }) => {
 
     return (
         <div>
-        <h2>{pattern.name}</h2>
+        <h2>{pattern.title}</h2>
         {/* pattern details will be added here! */}
         <button onClick={handleAddToCart}>Add to Cart</button>
         </div>
