@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
+import "./PatternCard.css"
 
-const PatternCard = ({ id, title, author, description, difficulty }) => {
+const PatternCard = ({ id, title, author, description, difficulty, price }) => {
     return (
         <div className="pattern-card">
             <button>
@@ -9,6 +10,7 @@ const PatternCard = ({ id, title, author, description, difficulty }) => {
                 <p>{author}</p>
                 <p>{description}</p>
                 <p>{difficulty}</p>
+                <p>{price}</p>
 
                 {/* {imageLoaded && imageUrl && <img src={imageUrl} alt={name} />} */}
             </Link>

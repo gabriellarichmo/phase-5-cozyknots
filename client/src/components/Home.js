@@ -1,6 +1,5 @@
 import "./Home.css";
 import PatternCard from "./pattern/PatternCard";
-import SearchBar from "./pattern/SearchBar"
 import { useState } from "react";
 // import toast from "react-hot-toast";
 // import { useOutletContext } from "react-router-dom";
@@ -15,13 +14,13 @@ function Home({patterns}) {
     const filterPatterns = () => {
         return patterns.filter((pattern) => {
         if (
-          (selectedCategory === "all" ||
+            (selectedCategory === "all" ||
             pattern.category === selectedCategory) &&
-          (selectedType === "all" || pattern.type === selectedType) &&
-          (selectedDifficulty === "all" ||
+            (selectedType === "all" || pattern.type === selectedType) &&
+            (selectedDifficulty === "all" ||
             pattern.difficulty === selectedDifficulty)
         ) {
-          return true;
+            return true;
         }
         return false;
         });
@@ -48,9 +47,9 @@ function Home({patterns}) {
         setSelectedType(type);
     };
 
-  const handleDifficultyChange = (difficulty) => {
-    setSelectedDifficulty(difficulty);
-  };
+    const handleDifficultyChange = (difficulty) => {
+        setSelectedDifficulty(difficulty);
+    };
 
     const handleSortChange = () => {
         setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -67,7 +66,6 @@ function Home({patterns}) {
                 <option value="all">All Types</option>
                 <option value="knit">Knit</option>
                 <option value="crochet">Crochet</option>
-            {/* Add other pattern types */}
             </select>
 
             {/* Category filter */}
