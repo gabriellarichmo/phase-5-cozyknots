@@ -1,9 +1,10 @@
 import "./Home.css";
+import PatternCard from "./pattern/PatternCard";
 // import { useEffect } from "react";
 // import toast from "react-hot-toast";
 // import { useOutletContext } from "react-router-dom";
 
-function Home() {
+function Home({patterns}) {
 //   const { updateCurrentUser } = useOutletContext();
 
 //   useEffect(() => {
@@ -22,6 +23,9 @@ function Home() {
                 <h1 className="title">
                 Cozy Knots Co.
                 </h1>
+                {patterns.map((pattern) => {
+                    return <PatternCard key={pattern.id} {...pattern} />;
+                })}
             </>
         </div>
     );

@@ -61,88 +61,96 @@ const EditProfile = () => {
 
   return (
     <div className="edit-profile">
-      <button onClick={toggleForm}>{editForm ? "Cancel" : "Edit Profile"}</button>
-      {editForm && (
-        <form onSubmit={formik.handleSubmit}>
-          <label>Email: </label>
-          <input
-            type="text"
-            name="email"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.email}
-            className="edit-profile-input"
-          />{" "}
-          <br></br>
-          {formik.errors.email && formik.touched.email && (
-            <div className="edit-error">{formik.errors.email}</div>
-          )}
-          <label>Name: </label>
-          <input
-            type="text"
-            name="name"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.name}
-            className="edit-profile-input"
-          />{" "}
-          <br></br>
-          {formik.errors.name && formik.touched.name && (
-            <div className="edit-error">{formik.errors.name}</div>
-          )}
-          <label>Username: </label>
-          <input
-            type="text"
-            name="username"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.username}
-            className="edit-profile-input"
-          />{" "}
-          <br></br>
-          {formik.errors.username && formik.touched.username && (
-            <div className="edit-error">{formik.errors.username}</div>
-          )}
-          <label>Profile Picture: </label>
-          <input
-            type="image"
-            alt="user avatar"
-            name="avatar"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.avatar}
-            className="edit-profile-input"
-          />{" "}
-          <br></br>
-          {formik.errors.avatar && formik.touched.avatar && (
-            <div className="edit-error">{formik.errors.avatar}</div>
-          )}
-          <label>Bio: </label>
-          <input
-            type="text"
-            name="bio"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.bio}
-            className="edit-profile-input"
-          />{" "}
-          <br></br>
-          {formik.errors.bio && formik.touched.bio && (
-            <div className="edit-error">{formik.errors.bio}</div>
-          )}
-          <br></br>
-          <button type="submit" className="edit-profile-submit">
-            Confirm Changes
-          </button>
-          <div className="delete-profile">
-            <h3>Delete Profile</h3>
-            <button style={buttonStyle} onClick={handleConfirmDelete}>
-              {" "}
-              Delete
+      <div className="profile-form-body">
+        <button className="button-55" onClick={toggleForm}>
+          {editForm ? "Cancel" : "Edit Profile"}
+        </button>
+        {editForm && (
+          <form id="profileForm" onSubmit={formik.handleSubmit}>
+            <label>Email: </label>
+            <input
+              type="text"
+              name="email"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+              className="edit-profile-input"
+            />{" "}
+            <br></br>
+            {formik.errors.email && formik.touched.email && (
+              <div className="edit-error">{formik.errors.email}</div>
+            )}
+            <label>Name: </label>
+            <input
+              type="text"
+              name="name"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.name}
+              className="edit-profile-input"
+            />{" "}
+            <br></br>
+            {formik.errors.name && formik.touched.name && (
+              <div className="edit-error">{formik.errors.name}</div>
+            )}
+            <label>Username: </label>
+            <input
+              type="text"
+              name="username"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.username}
+              className="edit-profile-input"
+            />{" "}
+            <br></br>
+            {formik.errors.username && formik.touched.username && (
+              <div className="edit-error">{formik.errors.username}</div>
+            )}
+            <label>Profile Picture: </label>
+            <input
+              type="image"
+              alt="user avatar"
+              name="avatar"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.avatar}
+              className="edit-profile-input"
+            />{" "}
+            <br></br>
+            {formik.errors.avatar && formik.touched.avatar && (
+              <div className="edit-error">{formik.errors.avatar}</div>
+            )}
+            <label>Bio: </label>
+            <input
+              type="text"
+              name="bio"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.bio}
+              className="edit-profile-input"
+            />{" "}
+            <br></br>
+            {formik.errors.bio && formik.touched.bio && (
+              <div className="edit-error">{formik.errors.bio}</div>
+            )}
+            <br></br>
+            <button type="submit" className="button-55-1">
+              Confirm Changes
             </button>
-          </div>
-        </form>
-      )}
+            <div className="delete-profile">
+              <h3>Delete Profile</h3>
+              <button
+                className="button-55-2"
+                style={buttonStyle}
+                onClick={handleConfirmDelete}
+              >
+                {" "}
+                Delete
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 };

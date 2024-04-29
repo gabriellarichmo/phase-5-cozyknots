@@ -67,66 +67,75 @@ const initialValues = {
 
   return (
     <div>
-      <button onClick={toggleForm}>{editForm ? "Cancel" : "Add a Pattern"}</button>
+      <button className="button-55" onClick={toggleForm}>
+        {editForm ? "Cancel" : "Add a Pattern"}
+      </button>
       {editForm && (
-        <form onSubmit={formik.handleSubmit}>
-            <label htmlFor="title">Title</label>
-            <input
+        <form id="patternForm" onSubmit={formik.handleSubmit}>
+          <label htmlFor="title">Title</label>
+          <input
             type="text"
             name="title"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.title}
-            />
-            {formik.errors.title && formik.touched.title && (
+            className="pattern-input"
+          />
+          {formik.errors.title && formik.touched.title && (
             <div className="error-message show">{formik.errors.title}</div>
-            )}
+          )}
 
-            <label>Description</label>
-            <input
+          <label>Description</label>
+          <input
             type="text"
             name="description"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.description}
-            />
-            {formik.errors.description && formik.touched.description && (
-            <div className="error-message show">{formik.errors.description}</div>
-            )}
+            className="pattern-input"
+          />
+          {formik.errors.description && formik.touched.description && (
+            <div className="error-message show">
+              {formik.errors.description}
+            </div>
+          )}
 
-            <label>Price</label>
-            <input
+          <label>Price</label>
+          <input
             type="number"
             name="price"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.price}
-            />
+            className="pattern-input"
+          />
 
-            <label>Author</label>
-            <input
+          <label>Author</label>
+          <input
             type="text"
             name="author"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.author}
-            />
+            className="pattern-input"
+          />
 
-            <label>Difficulty</label>
-            <input
+          <label>Difficulty</label>
+          <input
             type="text"
             name="difficulty"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.difficulty}
-            />
-            {formik.errors.difficulty && formik.touched.difficulty && (
+            className="pattern-input"
+          />
+          {formik.errors.difficulty && formik.touched.difficulty && (
             <div className="error-message show">{formik.errors.difficulty}</div>
-            )}
+          )}
 
-            <button type="submit" disabled={isSubmitting}>
+          <button className="button-55-1" type="submit" disabled={isSubmitting}>
             Submit
-            </button>
+          </button>
         </form>
       )}
     </div>

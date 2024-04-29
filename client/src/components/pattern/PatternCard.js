@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 
-const PatternCard = () => {
+const PatternCard = ({ id, title, author, description, difficulty }) => {
     return (
         <div className="pattern-card">
             <button>

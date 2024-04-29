@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
+
 
 const PatternDetail = ({ pattern }) => {
     const { addToCart } = useContext(CartContext);
@@ -7,6 +8,7 @@ const PatternDetail = ({ pattern }) => {
     const handleAddToCart = () => {
         addToCart(pattern);
     };
+
 
     return (
         <div>
