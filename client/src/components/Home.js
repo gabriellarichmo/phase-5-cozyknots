@@ -6,50 +6,83 @@ import { useState } from "react";
 // import { useOutletContext } from "react-router-dom";
 
 function Home({patterns}) {
-    const [searchQuery, setSearchQuery] = useState("");
-    // const [sortByAZ, setSortByAZ] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState("all");
+    const [selectedType, setSelectedType] = useState("all");
+    const [sortOrder, setSortOrder] = useState("asc");
 //   const { updateCurrentUser } = useOutletContext();
 
-//   useEffect(() => {
-//     fetch("/me").then((resp) => {
-//       if (resp.ok) {
-//         resp.json().then(updateCurrentUser);
-//       } else {
-//         toast.error("Please log in!");
-//       }
-//     });
-//   }, []);
-    const filteredPatterns = patterns
-        .filter((pattern) =>
-        pattern.name.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+    const filterPatterns = () => {
+        return patterns.filter((pattern) => {
+        if (
+            (selectedCategory === "all" || pattern.category === selectedCategory) &&
+            (selectedType === "all" || pattern.type === selectedType)
+        ) {
+            return true;
+        }
+        return false;
+        });
+    };
 
 
+    const sortPatterns = (patterns) => {
+        return patterns.sort((a, b) => {
+        const patternA = a.title.toLowerCase();
+        const patternB = b.title.toLowerCase();
+        if (sortOrder === "asc") {
+            return patternA.localeCompare(patternB);
+        } else {
+            return patternB.localeCompare(patternA);
+        }
+        });
+    };
 
-    // const handleSortByAZ = () => {
-    //     setSortByAZ(!sortByAZ);
-    // }; 
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category);
+    };
 
+    const handleTypeChange = (type) => {
+        setSelectedType(type);
+    };
 
+    const handleSortChange = () => {
+        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    };
+
+    const filteredPatterns = filterPatterns();
+    const sortedPatterns = sortPatterns(filteredPatterns);
 
     return (
-      <div className="home-page">
-        <>
-          <h1 className="title">Cozy Knots Co.</h1>
-          <div className="sort-filter-container">
-            <div className="search-container">
-              <SearchBar setSearchQuery={setSearchQuery} />
-            </div>
-            {/* <button className="sort-button" onClick={handleSortByAZ}> */}
-              {/*sort here */}
-            {/* </button> */}
-          </div>
-          <div className="patterns-container">
-            {patterns.map((pattern) => {
-                return <PatternCard key={pattern.id} {...pattern} />;
-            })}
-          </div>
-        </>
+      <div>
+        <h1 className="title">Cozy Knots Co.</h1>
+        {/* Type filter */}
+        <select onChange={(e) => handleTypeChange(e.target.value)}>
+          <option value="all">All Types</option>
+          <option value="knit">Knit</option>
+          <option value="crochet">Crochet</option>
+          {/* Add other pattern types */}
+        </select>
+
+        {/* Category filter */}
+        <select onChange={(e) => handleCategoryChange(e.target.value)}>
+          <option value="all">All Categories</option>
+          <option value="scarf">Scarf</option>
+          <option value="sweater">Sweater</option>
+          <option value="mittens">Mittens</option>
+          <option value="socks">Socks</option>
+          <option value="amigurumi">Amigurumi</option>
+        </select>
+
+        {/* Sort order */}
+        <button onClick={handleSortChange}>
+          {sortOrder === "asc" ? "Sort A-Z" : "Sort Z-A"}
+        </button>
+
+        {/* Display patterns */}
+        <ul>
+          {sortedPatterns.map((pattern) => (
+            <PatternCard key={pattern.id} {...pattern} />
+          ))}
+        </ul>
       </div>
     );
 }
