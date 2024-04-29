@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 0dd7828c4a05
+Revision ID: 4971f0f1ae00
 Revises: 
-Create Date: 2024-04-25 11:03:05.495102
+Create Date: 2024-04-28 17:09:00.938669
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0dd7828c4a05'
+revision = '4971f0f1ae00'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -54,11 +54,11 @@ def upgrade():
     )
     op.create_table('purchases',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('pattern_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('pattern_id', sa.Integer(), nullable=False),
     sa.Column('price', sa.Float(), nullable=True),
     sa.Column('payment_method', sa.String(), nullable=True),
-    sa.Column('status', sa.String(), nullable=True),
+    sa.Column('status', sa.String(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['pattern_id'], ['patterns.id'], ),

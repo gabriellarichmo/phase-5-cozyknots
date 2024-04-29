@@ -9,7 +9,7 @@ import Community from "../components/user/Community";
 import NewPatternForm from "../components/pattern/NewPatternForm";
 import PurchaseCard from "../components/purchase/PurchaseCard";
 import MyCart from "../components/purchase/MyCart";
-
+import EditProfile from "../components/user/EditProfile";
 
 export const router = createBrowserRouter([
   {
@@ -27,8 +27,14 @@ export const router = createBrowserRouter([
         element: <Registration />
       },
       {
-        path: "user/:userId",
-        element: <UserCard />
+        path: "/users/:userId",
+        element: <UserCard />,
+        children: [
+          {
+            path: "/edit",
+            element: <EditProfile />
+          }
+        ]
       },
       {
         path: "/community",

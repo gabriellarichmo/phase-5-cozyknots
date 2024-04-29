@@ -6,7 +6,7 @@ import { useContext } from "react";
 import { UserContext } from "../user/UserContext";
 
 const NavBar = () => {
-    const { currentUser } = useContext(UserContext);
+    const { currentUser, handleLogout } = useContext(UserContext);
 
     return (
       <div>
@@ -23,11 +23,13 @@ const NavBar = () => {
             )}
             {currentUser && (
               <>
-                <NavLink to={`/user/${currentUser.id}`}>My Profile</NavLink>
+                <NavLink to={`/users/${currentUser.id}`}>My Profile</NavLink>
                 <br></br>
                 <NavLink to="/community">Community</NavLink>
                 <br></br>
                 <NavLink to="/cart">My Cart</NavLink>
+                <br></br>
+                <NavLink onClick={handleLogout}>Logout</NavLink>
               </>
             )}
           </nav>

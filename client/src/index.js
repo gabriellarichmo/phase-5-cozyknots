@@ -1,20 +1,8 @@
-// import React from "react";
-// import App from "./components/App";
-// import "./index.css";
-// import { createRoot } from "react-dom/client";
-// import { RouterProvider } from "react-router-dom";
-// import { router } from "./routes";
-
-// const container = document.getElementById("root");
-// const root = createRoot(container);
-// root.render(<App />);
-
-// root.render(<RouterProvider router={router} />);
-import { BrowserRouter as Router } from "react-router-dom";
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./components/App";
+import { BrowserRouter as Router } from "react-router-dom"; // Import BrowserRouter
 import { UserProvider } from "./components/user/UserContext";
+import App from "./components/App";
 
 ReactDOM.render(
   <React.StrictMode>
