@@ -1,23 +1,33 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "./CartContext";
+import { Link } from "react-router-dom"
 
 const MyCart = () => {
-    const { cartItems, removeFromCart } = useContext(CartContext);
+    const { cartItems, removeFromCart, stripeLoaded } = useContext(CartContext);
 
-    const handleRemoveFromCart = (patternId) => {
-        removeFromCart(patternId);
-    };
 
     return (
         <div>
-        <h2>My Cart</h2>
-        {cartItems.map((item) => (
-            <div key={item.id}>
-            <p>{item.name}</p>
-            <button onClick={() => handleRemoveFromCart(item.id)}>Remove</button>
+            <h1>My Cart</h1>
+            {stripeLoaded && (
+                <stripe-pricing-table
+                    pricing-table-id="prctbl_1PAwvT01oc5MNduHbiUlqy5Y"
+                    publishable-key="pk_test_51P8nqZ01oc5MNduH9V0nlRddBjThEeQnoi03xdx8IgdJNBeZrOkN9qtQ9qih3wkz4FxbortvgqNkhlBnEaPwLTW600gDX8r3B0"
+                ></stripe-pricing-table>
+            )}
+            <div>
+                {cartItems.length > 0 ? (
+                    cartItems.map((item) => (
+                        <div key={item.id}>
+                            <p>{item.title}</p>
+                            <button onClick={() => removeFromCart(item.id)}>Remove from My Cart</button>
+                        </div>
+                    ))
+                ) : (
+                    <p>Your cart is empty.</p>
+                )}
             </div>
-        ))}
-        {/* checkout button? */}
+            <Link to="/checkout">Proceed to Checkout</Link>
         </div>
     );
 };
