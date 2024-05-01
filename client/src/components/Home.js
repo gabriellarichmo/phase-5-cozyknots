@@ -1,21 +1,46 @@
 import "./Home.css";
 import PatternCard from "./pattern/PatternCard";
 import { useState, useEffect } from "react";
-// import toast from "react-hot-toast";
+import toast from "react-hot-toast";
 // import { useOutletContext } from "react-router-dom";
 
 function Home({patterns}) {
+    const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [selectedType, setSelectedType] = useState("all");
     const [selectedDifficulty, setSelectedDifficulty] = useState("all");
     const [sortOrder, setSortOrder] = useState("asc");
 //   const { updateCurrentUser } = useOutletContext();
 
+    useEffect(() => {
+        fetch("/categories")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+            return response.json();
+            })
+            .then((categories) => {
+                setCategories(categories);
+            })
+            .catch((error) => {
+                console.error("Error fetching categories:", error);
+            });
+    }, []);
+
+
+    const getCategoryName = (categoryId) => {
+        const category = categories.find((cat) => cat.id === categoryId);
+        return category ? category.name : "Unknown";
+    };
+
+
     const filterPatterns = () => {
         return patterns.filter((pattern) => {
+        const categoryName = getCategoryName(pattern.category_id);
         if (
             (selectedCategory === "all" ||
-            pattern.category.id === selectedCategory) &&
+            categoryName === selectedCategory) &&
             (selectedType === "all" || pattern.type === selectedType) &&
             (selectedDifficulty === "all" ||
             pattern.difficulty === selectedDifficulty)
