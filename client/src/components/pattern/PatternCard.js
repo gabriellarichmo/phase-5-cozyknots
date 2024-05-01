@@ -3,11 +3,11 @@ import { CartContext } from "../purchase/CartContext";
 import { useContext } from "react";
 import "./PatternCard.css"
 
-const PatternCard = ({ id, title, author, description, difficulty, price }) => {
+const PatternCard = ({ id, title, author, description, difficulty, price, category }) => {
     const { addToCart } = useContext(CartContext);
 
     const handleAddToCart = () => {
-        addToCart({ id, title, author, description, difficulty, price })
+        addToCart({ id, title, author, description, difficulty, price, category })
     }
 
     return (
@@ -16,6 +16,7 @@ const PatternCard = ({ id, title, author, description, difficulty, price }) => {
             <h3>{title}</h3>
             <p>Author: {author}</p>
             <p>{description}</p>
+            <p>{category.name}</p>
             <p>Difficulty: {difficulty}</p>
             <p>${price}</p>
 

@@ -17,7 +17,7 @@ from models.category import Category
 from schemas.user_schema import user_schema, users_schema
 from schemas.pattern_schema import pattern_schema, patterns_schema
 from schemas.purchase_schema import purchase_schema, purchases_schema
-# from schemas.category_schema import category_schema, categories_schema
+from schemas.category_schema import category_schema, categories_schema
 
 # Views go here!
 
@@ -138,8 +138,19 @@ class Patterns(Resource):
         
     def post(self):
         try:
-            data = (request.json)
-            pattern = pattern_schema.load(data)
+            data = request.json
+            category_id = data.get('category_id')
+            category = Category.query.get(category_id)
+            if not category:
+                return {'error': 'Category not found'}, 404
+            pattern = Pattern(
+                title=data['title'],
+                description=data['description'],
+                price=data['price'],
+                author=data['author'],
+                difficulty=data['difficulty'],
+                category=category
+            )
             db.session.add(pattern)
             db.session.commit()
             return pattern_schema.dump(pattern), 201
@@ -260,8 +271,14 @@ class PurchaseById(Resource):
                 return {"error": f"Purchase {id} not found"}, 404
         except Exception as e:
             return {"error": str(e)}, 400
+        
+class Categories(Resource):
+    def get(self):
+        categories = [category.to_dict() for category in Category.query]
+        return categories, 200
 
 
+api.add_resource(Categories, "/categories")
 api.add_resource(Patterns, "/patterns")
 api.add_resource(PatternById, "/patterns/<int:id>")
 api.add_resource(Users, "/users")

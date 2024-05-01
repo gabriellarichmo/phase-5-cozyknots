@@ -3,7 +3,7 @@ from marshmallow import validate, validates, ValidationError, fields, validate
 from models.pattern import Pattern
 
 class PatternSchema(ma.SQLAlchemyAutoSchema):
-    
+    category = fields.Nested('CategorySchema', exclude=('patterns',))
     class Meta:
         model = Pattern
         load_instance = True

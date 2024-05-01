@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { object, string, number } from "yup";
 import { useFormik } from "formik";
@@ -7,28 +7,43 @@ import toast from "react-hot-toast";
 const NewPatternForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editForm, setEditForm] = useState(false);
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
- 
-const patternSchema = object({
-  title: string()
-    .max(50, "Title cannot be longer than 50 characters")
-    .required("Title is required"),
-  description: string().max(
-    250,
-    "Description cannot be longer than 250 characters"
-  ),
-  price: number(),
-  author: string(),
-  difficulty: string(),
-});
 
-const initialValues = {
-  title: "",
-  description: "",
-  price: "",
-  author: "",
-  difficulty: "",
-};
+
+  useEffect(() => {
+    fetch("/categories")
+      .then((response) => response.json())
+      .then((data) => {
+        setCategories(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
+  
+  const patternSchema = object({
+    title: string()
+      .max(50, "Title cannot be longer than 50 characters")
+      .required("Title is required"),
+    description: string().max(
+      250,
+      "Description cannot be longer than 250 characters"
+    ),
+    price: number(),
+    author: string(),
+    difficulty: string(),
+    category_id: number().required("Category is required"),
+  });
+
+  const initialValues = {
+    title: "",
+    description: "",
+    price: "",
+    author: "",
+    difficulty: "",
+    category_id: "",
+  };
 
   const formik = useFormik({
     initialValues,
@@ -97,6 +112,27 @@ const initialValues = {
           {formik.errors.description && formik.touched.description && (
             <div className="error-message show">
               {formik.errors.description}
+            </div>
+          )}
+
+          <label>Category</label>
+          <select
+            name="category_id"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.category_id}
+            className="pattern-input"
+          >
+            <option value="">Select a category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+          {formik.errors.category_id && formik.touched.category_id && (
+            <div className="error-message show">
+              {formik.errors.category_id}
             </div>
           )}
 

@@ -1,6 +1,6 @@
 import "./Home.css";
 import PatternCard from "./pattern/PatternCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // import toast from "react-hot-toast";
 // import { useOutletContext } from "react-router-dom";
 
@@ -15,7 +15,7 @@ function Home({patterns}) {
         return patterns.filter((pattern) => {
         if (
             (selectedCategory === "all" ||
-            pattern.category === selectedCategory) &&
+            pattern.category.id === selectedCategory) &&
             (selectedType === "all" || pattern.type === selectedType) &&
             (selectedDifficulty === "all" ||
             pattern.difficulty === selectedDifficulty)
@@ -71,8 +71,9 @@ function Home({patterns}) {
             {/* Category filter */}
             <select onChange={(e) => handleCategoryChange(e.target.value)}>
                 <option value="all">All Categories</option>
-                <option value="scarf">Scarf</option>
-                <option value="sweater">Sweater</option>
+                <option value="scarf">Scarves</option>
+                <option value="sweater">Sweaters</option>
+                <option value="hat">Hats</option>
                 <option value="mittens">Mittens</option>
                 <option value="socks">Socks</option>
                 <option value="amigurumi">Amigurumi</option>
