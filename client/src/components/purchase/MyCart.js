@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { CartContext } from "./CartContext";
 import { Link } from "react-router-dom"
+import StripePricingTable from "./StripePricingTable";
 
 const MyCart = () => {
     const { cartItems, removeFromCart, stripeLoaded } = useContext(CartContext);
@@ -10,10 +11,9 @@ const MyCart = () => {
         <div>
             <h1>My Cart</h1>
             {stripeLoaded && (
-                <stripe-pricing-table
-                    pricing-table-id="prctbl_1PAwvT01oc5MNduHbiUlqy5Y"
-                    publishable-key="pk_test_51P8nqZ01oc5MNduH9V0nlRddBjThEeQnoi03xdx8IgdJNBeZrOkN9qtQ9qih3wkz4FxbortvgqNkhlBnEaPwLTW600gDX8r3B0"
-                ></stripe-pricing-table>
+                <div>
+                    <StripePricingTable />
+                </div>
             )}
             <div>
                 {cartItems.length > 0 ? (
@@ -27,7 +27,6 @@ const MyCart = () => {
                     <p>Your cart is empty.</p>
                 )}
             </div>
-            <Link to="/checkout">Proceed to Checkout</Link>
         </div>
     );
 };

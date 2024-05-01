@@ -17,7 +17,7 @@ const PatternCard = ({ id, title, author, description, difficulty, price }) => {
             <p>Author: {author}</p>
             <p>{description}</p>
             <p>Difficulty: {difficulty}</p>
-            <p>{price}</p>
+            <p>${price}</p>
 
                 {/* {imageLoaded && imageUrl && <img src={imageUrl} alt={name} />} */}
             {/* </Link> */}

@@ -4,9 +4,11 @@ import { useState } from "react";
 import "./NavBar.css";
 import { useContext } from "react";
 import { UserContext } from "../user/UserContext";
+import { CartContext } from "../purchase/CartContext";
 
 const NavBar = () => {
     const { currentUser, handleLogout } = useContext(UserContext);
+    const {} = useContext(CartContext);
 
     return (
       <div>
