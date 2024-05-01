@@ -13,6 +13,8 @@ class Pattern(db.Model, SerializerMixin):
   price = db.Column(db.Float)
   author = db.Column(db.String)
   difficulty = db.Column(db.String)
+  type = db.Column(db.String)
+  image = db.Column(db.String)
   created_at = db.Column(db.DateTime, server_default=db.func.now())
   updated_at = db.Column(db.DateTime, onupdate=db.func.now())
   category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
@@ -21,6 +23,7 @@ class Pattern(db.Model, SerializerMixin):
     return f"""<Pattern {self.id}: 
                         Title: {self.title}, 
                         Author: {self.author}, 
+                        Type: {self.type},
                         Description: {self.description}, 
                         Difficulty: {self.difficulty}, 
                         Price: {self.price} 
@@ -65,3 +68,12 @@ class Pattern(db.Model, SerializerMixin):
       raise ValueError("Difficulty must be either Beginner, Intermediate, or Advanced.")
     else:
       return difficulty
+  
+  @validates("type")
+  def validate_type(self, _, type):
+    if not isinstance(type, str):
+      raise TypeError("Type must be of type string.")
+    elif type not in ["Knit", "Crochet"]:
+      raise ValueError("Type must be either Knit or Crochet.")
+    else:
+      return type

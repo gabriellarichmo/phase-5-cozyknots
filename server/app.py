@@ -3,11 +3,12 @@
 # Standard library imports
 
 # Remote library imports
-from flask import request, g, session
+from flask import request, g, session, send_file
 from flask_restful import Resource
 from functools import wraps
 from werkzeug.security import generate_password_hash
 from config import app, db, api
+import os
 # Models
 from models.user import User
 from models.pattern import Pattern
@@ -176,6 +177,13 @@ class PatternById(Resource):
                 return {"error": str(e)}, 400
         else:
             return {"error": f"Pattern {id} not found"}, 404
+    
+@app.route('/images/<path:image_path>')
+def get_image(image_path):
+    image_folder = 'pattern_pictures'
+    full_path = os.path.join(image_folder, image_path)
+    print(full_path)
+    return send_file(full_path, mimetype='image/jpeg') 
             
     #! could be problematic - hide pattern from profile instead of deleting from all users that purchased/downloaded
     # def delete(self, id):

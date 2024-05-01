@@ -1,7 +1,7 @@
 import "./Home.css";
 import PatternCard from "./pattern/PatternCard";
 import { useState, useEffect } from "react";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 // import { useOutletContext } from "react-router-dom";
 
 function Home({patterns}) {
@@ -12,21 +12,21 @@ function Home({patterns}) {
     const [sortOrder, setSortOrder] = useState("asc");
 //   const { updateCurrentUser } = useOutletContext();
 
-    useEffect(() => {
-        fetch("/categories")
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-            return response.json();
-            })
-            .then((categories) => {
-                setCategories(categories);
-            })
-            .catch((error) => {
-                console.error("Error fetching categories:", error);
-            });
-    }, []);
+    // useEffect(() => {
+    //     fetch("/categories")
+    //         .then((response) => {
+    //             if (!response.ok) {
+    //                 throw new Error("Network response was not ok");
+    //             }
+    //         return response.json();
+    //         })
+    //         .then((categories) => {
+    //             setCategories(categories);
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error fetching categories:", error);
+    //         });
+    // }, []);
 
 
     const getCategoryName = (categoryId) => {
