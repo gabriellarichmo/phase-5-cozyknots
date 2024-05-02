@@ -3,41 +3,72 @@ import { useNavigate } from "react-router-dom";
 import { object, string } from "yup";
 import { useFormik, Formik } from "formik";
 import { UserContext } from "./UserContext";
+import toast from "react-hot-toast";
+
+
 
 const EditProfile = () => {
-  const { currentUser, handleEditUser, handleDeleteUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser, handleDeleteUser } = useContext(UserContext);
   const [editForm, setEditForm] = useState(false);
+  const [updatedUser, setUpdatedUser] = useState(false);
   const navigate = useNavigate();
-
+  
   const editProfileSchema = object({
     username: string().max(20, "Username must be max of 20 characters"),
     email: string().email(),
     name: string().max(20),
     bio: string().max(250),
-    avatar: string().url("Avatar must be a valid URL") 
+    avatar: string().url("Avatar must be a valid URL").notRequired() 
   });
-
+  
   const initialValues = {
-    username: currentUser.username,
-    email: currentUser.email,
-    name: currentUser.name,
-    bio: currentUser.bio,
-    avatar: currentUser.avatar,
+    username: "",
+    email: "",
+    name: "",
+    bio: "",
+    avatar: "",
   };
+  // const initialValues = {
+  //   username: currentUser.username || "",
+  //   email: currentUser.email || "",
+  //   name: currentUser.name || "",
+  //   bio: currentUser.bio || "",
+  //   avatar: currentUser.avatar || "",
+  // };
 
   const formik = useFormik({
     initialValues,
     validationSchema: editProfileSchema,
-    onSubmit: async (values) => {
-      try {
-        await handleEditUser(values);
-        navigate(`/users/${currentUser.id}`);
-      } catch (error) {
-        console.error("Error editing profile", error);
-        //add toast message
+    onSubmit: (formData) => {
+      fetch(`/users/${currentUser.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+      .then((resp) => {
+      if (resp.ok) {
+        resp
+          .json()
+          .then((user) => {
+            setCurrentUser(updatedUser);
+            navigate(`/users/${currentUser.id}`)
+            toast.success("Profile updated successfully");
+          })
+      } else {
+        return resp.json().then((errorObj) => toast.error(errorObj.message));
       }
+      })
+      .catch((error) => {
+        console.error("Error updating profile:", error);
+        toast.error("Error updating profile. Please try again later.");
+      });
     },
   });
+
+
+
 
   const toggleForm = () => {
     setEditForm((prevForm) => !prevForm);
@@ -108,7 +139,7 @@ const EditProfile = () => {
             )}
             <label>Profile Picture: </label>
             <input
-              type="image"
+              type="text"
               alt="user avatar"
               name="avatar"
               onChange={formik.handleChange}

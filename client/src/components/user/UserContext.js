@@ -15,99 +15,45 @@ export const UserProvider = ({ children }) => {
         if (response.ok) {
           const user = await response.json();
           setCurrentUser(user);
+          console.log(currentUser)
         } else {
           throw new Error("Unable to fetch current user.");
         }
       } catch (error) {
         console.error("Error fetching current user:", error);
         toast.error("Please log in");
-        navigate("/registration");
+        // if (!currentUser) {
+          navigate("/registration");
+        // }
       }
     };
 
     fetchCurrentUser();
   }, [navigate]);
 
-  // useEffect(() => {
-  //   if (!currentUser) {
-  //     fetch("/current_user").then((resp) => {
-  //       if (resp.ok) {
-  //         return resp.json();
-  //       } else {
-  //         throw new Error("Unable to fetch current user.");
-  //       }
-  //     })
-  //     .then((user) => {
-  //       setCurrentUser(user);
-  //       return user;
-  //     })
-  //     .then((user) => {
-  //       fetch(`/users/${user.id}`)
-  //       .then((resp) => {
-  //         if (resp.ok) {
-  //           return resp.json();
-  //         } else {
-  //           throw new Error("Unable to fetch current user ID.");
-  //         }
-  //       })
-  //       .then((userId) => {
-  //         if (user.id !== userId) {
-  //           navigate(`/users/${user.id}`);
-  //         }
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       toast.error("Please log in");
-  //       navigate("/registration");
-  //     });
-  //   }
-  // }, [currentUser, navigate]);
-
-  // const handleEditUser = (formData) => {
+  // const handleEditUser = async (formData) => {
   //   try {
-  //     fetch(`/users/${currentUser.id}`, {
+  //     const response = await fetch(`/users/${currentUser.id}`, {
   //       method: "PATCH",
   //       headers: {
   //         "Content-Type": "application/json",
   //       },
   //       body: JSON.stringify(formData),
-  //     }).then((resp) => {
-  //       if (resp.ok) {
-  //         resp.json().then((user) => {
-  //           setCurrentUser(user);
-  //         });
-  //       } else {
-  //         return resp
-  //           .json()
-  //           .then((errorObj) => toast.error(errorObj.message));
-  //       }
   //     });
-  //   } catch (err) {
-  //     throw err;
+  //     if (response.ok) {
+  //       const updatedUser = await response.json();
+  //       console.log(currentUser)
+  //       setCurrentUser(updatedUser);
+  //       toast.success("Profile updated successfully");
+  //     } else {
+  //       const errorObj = await response.json();
+  //       toast.error(errorObj.message);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("Failed to update profile");
   //   }
   // };
-  const handleEditUser = async (formData) => {
-    try {
-      const response = await fetch(`/users/${currentUser.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        const updatedUser = await response.json();
-        setCurrentUser(updatedUser);
-        toast.success("Profile updated successfully");
-      } else {
-        const errorObj = await response.json();
-        toast.error(errorObj.message);
-      }
-    } catch (error) {
-      console.error("Error editing user:", error);
-      toast.error("Failed to update profile");
-    }
-  };
 
   const handleLogout = async () => {
     try {
@@ -120,22 +66,7 @@ export const UserProvider = ({ children }) => {
       toast.error("Failed to log out");
     }
   };
-  // const handleLogout = () => {
-  //   fetch("/logout", { method: "DELETE" })
-  //     .then(() => {
-  //       setCurrentUser(null);
-  //       toast("Come back soon!", {
-  //         icon: "👋",
-  //       });
-  //       navigate("/");
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
 
-  // const handleDeleteUser = () => {
-  //   fetch(`/users/${currentUser.id}`, { method: "DELETE" })
-  //     .then(handleLogout);
-  // };
   const handleDeleteUser = async () => {
     try {
       await fetch(`/users/${currentUser.id}`, { method: "DELETE" });
@@ -147,7 +78,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-      <UserContext.Provider value={{ currentUser, setCurrentUser, handleLogout, handleEditUser, handleDeleteUser }}>
+      <UserContext.Provider value={{ currentUser, setCurrentUser, handleLogout, handleDeleteUser }}>
           {children}
       </UserContext.Provider>
   );

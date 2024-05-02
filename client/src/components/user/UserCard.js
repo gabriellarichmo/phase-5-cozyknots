@@ -10,7 +10,7 @@ const UserCard = () => {
   return (
     <>
       <div className="user-profile">
-        <EditProfile />
+        <EditProfile {...currentUser}/>
         <NewPatternForm />
         <div className="user-card">
           {currentUser ? (

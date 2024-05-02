@@ -11,6 +11,7 @@ class Pattern(db.Model, SerializerMixin):
   title = db.Column(db.String(50), nullable=False)
   description = db.Column(db.String(250), nullable=False)
   price = db.Column(db.Float)
+  is_free = db.Column(db.Boolean)
   author = db.Column(db.String)
   difficulty = db.Column(db.String)
   type = db.Column(db.String)
@@ -18,6 +19,8 @@ class Pattern(db.Model, SerializerMixin):
   created_at = db.Column(db.DateTime, server_default=db.func.now())
   updated_at = db.Column(db.DateTime, onupdate=db.func.now())
   category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+  # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 
   def __repr__(self):
     return f"""<Pattern {self.id}: 

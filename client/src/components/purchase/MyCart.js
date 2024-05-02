@@ -1,7 +1,9 @@
 import { useContext, useState } from "react";
 import { CartContext } from "./CartContext";
-import { Link } from "react-router-dom"
+// import { Link } from "react-router-dom"
 import StripePricingTable from "./StripePricingTable";
+import PatternCard from "../pattern/PatternCard";
+import "./MyCart.css"
 
 const MyCart = () => {
     const { cartItems, removeFromCart, stripeLoaded } = useContext(CartContext);
@@ -19,7 +21,7 @@ const MyCart = () => {
                 {cartItems.length > 0 ? (
                     cartItems.map((item) => (
                         <div key={item.id}>
-                            <p>{item.title}</p>
+                            <PatternCard {...item} />
                             <button onClick={() => removeFromCart(item.id)}>Remove from My Cart</button>
                         </div>
                     ))
