@@ -82,6 +82,7 @@ function Home({patterns}) {
 
     const filteredPatterns = filterPatterns();
     const sortedPatterns = sortPatterns(filteredPatterns);
+    console.log(sortedPatterns)
 
     return (
         <div>
@@ -118,7 +119,7 @@ function Home({patterns}) {
             </button>
 
             {/* Display patterns */}
-            <ul>
+            <ul className="pattern-list-container">
             {sortedPatterns.map((pattern) => (
                 <PatternCard key={pattern.id} {...pattern} />
             ))}

@@ -11,11 +11,13 @@ class Category(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
-    parent_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-    parent = db.relationship('Category', remote_side=[id], backref='children')
+    # parent_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+
 
 
     patterns = db.relationship('Pattern', back_populates='category')
+
+    serialize_rules = ("-patterns.category",)
 
 
     @classmethod

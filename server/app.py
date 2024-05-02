@@ -3,12 +3,13 @@
 # Standard library imports
 
 # Remote library imports
-from flask import request, g, session, send_file
+from flask import request, g, session, send_file, abort, jsonify
 from flask_restful import Resource
 from functools import wraps
 from werkzeug.security import generate_password_hash
 from config import app, db, api
 import os
+import stripe
 # Models
 from models.user import User
 from models.pattern import Pattern
@@ -47,6 +48,9 @@ def login_required(func):
         return func(*args, **kwargs)
     return decorated_function
 
+
+
+
 # #! ALL REGISTRATION RELATED ROUTES
 @app.route("/signup", methods=["POST"])
 def signup():
@@ -78,16 +82,6 @@ def signup():
     
 @app.route("/login", methods=["POST"])
 def login():
-    # try:
-    #     data = request.json 
-    #     user = User.query.filter_by(email=data.get("email")).first()
-    #     if user and user.authenticate(data.get("password")):
-    #         session["user_id"] = user.id
-    #         return user.to_dict(), 200
-    #     else:
-    #         return {"message": "Invalid Credentials"}, 422
-    # except Exception as e:
-    #     return {"message": str(e)}, 422
     try:
         data = request.json
         user = User.query.filter_by(username=data["username"]).first()
@@ -119,14 +113,6 @@ def current_user():
             return {"message": "Please log in"}, 400
     except Exception as e:
         return {"error": str(e)}
-    # try:
-    #     if "user_id" in session:
-    #         user = db.session.get(User, session.get("user_id"))
-    #         return user_schema.dump(user), 200
-    #     else:
-    #         return {"message": "Please log in!"}, 400
-    # except Exception as e:
-    #     return {"error": str(e)}, 500
 
 # #! ALL PATTERN RELATED ROUTES
 class Patterns(Resource):
@@ -162,9 +148,26 @@ class Patterns(Resource):
 class PatternById(Resource):
     def get(self, id):
         try:
-            return pattern_schema.dump(g.pattern), 200
+            pattern = Pattern.query.get(id)
+            if not pattern:
+                abort(404, message="Pattern not found")
+            return pattern_schema.dump(pattern), 200
         except Exception as e:
             return {"error": str(e)}, 400
+        
+    def post(self, id):
+        user_id = request.json.get('user_id')
+        pattern = Pattern.query.get(id)
+        if not pattern:
+            abort(404, message="Pattern not found")
+        if pattern.is_free:
+            return jsonify({"message": "Pattern downloaded successfully", "pattern": pattern_schema.dump(pattern)}), 200
+        
+        purchase = Purchase.query.filter_by(user_id=user_id, pattern_id=id).first()
+        if purchase:
+            return jsonify({"message": "Pattern downloaded successfully", "pattern": pattern_schema.dump(pattern)}), 200
+        else:
+            return jsonify({"message": "Purchase required to download the pattern"}), 402
         
     def patch(self, id):
         if g.pattern:

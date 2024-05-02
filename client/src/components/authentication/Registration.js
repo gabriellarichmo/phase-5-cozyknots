@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import "./Registration.css";
 import { object, string } from "yup";
 import { useFormik } from "formik";
@@ -21,7 +21,9 @@ const signupSchema = object({
 });
 
 const signinSchema = object({
-  username: string().max(20, "Username must be max of 20 characters"),
+  username: string()
+    .max(20, "Username must be max of 20 characters")
+    .required("Username is required"),
   password: string()
     .min(5, "Password must be at least 5 characters long")
     .matches(
@@ -43,10 +45,28 @@ const Registration = () => {
   const navigate = useNavigate();
   const { setCurrentUser } = useContext(UserContext);
 
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const response = await fetch("/current_user");
+        if (response.ok) {
+          const user = await response.json();
+          setCurrentUser(user);
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Error checking authentication:", error);
+      }
+    };
+
+    checkAuthentication();
+  }, []);
+
   const formik = useFormik({
     initialValues,
-    validationSchemas: login ? signinSchema : signupSchema,
+    validationSchema: login ? signinSchema : signupSchema,
     onSubmit: (formData) => {
+      console.log("Login form data:", formData);
       fetch(requestedUrl, {
         method: "POST",
         headers: {
@@ -58,6 +78,7 @@ const Registration = () => {
           password_hash: formData.password,
         }),
       }).then((resp) => {
+        console.log("Login response:", resp);
         if (resp.ok) {
           resp
             .json()
@@ -71,6 +92,10 @@ const Registration = () => {
         } else {
           return resp.json().then((errorObj) => toast.error(errorObj.message));
         }
+      })
+      .catch((error) => {
+        console.error("Error logging in:", error);
+        toast.error("Error logging in. Please try again later.");
       });
     },
   });
@@ -83,31 +108,31 @@ const Registration = () => {
           <form id="regForm" onSubmit={formik.handleSubmit}>
             {!login && (
               <>
-                <label>Username: </label>
+                <label>Email: </label>
                 <input
                   type="text"
-                  name="username"
+                  name="email"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.username}
+                  value={formik.values.email}
                   className="reg-input"
                 />
-                {formik.errors.username && formik.touched.username && (
-                  <div className="username-error">{formik.errors.username}</div>
+                {formik.errors.email && formik.touched.email && (
+                  <div className="email-error">{formik.errors.email}</div>
                 )}
               </>
             )}
-            <label>Email: </label>
+            <label>Username: </label>
             <input
               type="text"
-              name="email"
+              name="username"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.email}
+              value={formik.values.username}
               className="reg-input"
             />
-            {formik.errors.email && formik.touched.email && (
-              <div className="email-error">{formik.errors.email}</div>
+            {formik.errors.username && formik.touched.username && (
+              <div className="username-error">{formik.errors.username}</div>
             )}
             <label>Password: </label>
             <input

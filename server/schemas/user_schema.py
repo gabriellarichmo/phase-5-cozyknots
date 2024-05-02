@@ -42,7 +42,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
                                 error_messages={"required": "Password is required.",
                                                 "validate.Length": "Password must be at least 8 characters long.", 
                                                 "validate.Regexp": "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."})
-
+    avatar = fields.String()
 
 
     @validates_schema

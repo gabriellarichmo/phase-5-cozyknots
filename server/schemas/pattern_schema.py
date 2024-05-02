@@ -8,7 +8,9 @@ class PatternSchema(ma.SQLAlchemyAutoSchema):
         model = Pattern
         load_instance = True
         # exclude = ["created_at", "updated_at"]
-        
+    
+    is_free = fields.Boolean(required=True)
+    download_link = fields.String()
 
     # price = fields.Float(required=True, validate=validate.Length(min=1,max=10, error="Price must be between 1 and 10."))
     # difficulty = fields.String(required=True, validate=validate.Length(min=2,max=15, error="Difficulty must"))
