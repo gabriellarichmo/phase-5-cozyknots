@@ -112,17 +112,29 @@ class Patterns(Resource):
     def post(self):
         try:
             data = request.json
-            category_id = data.get('category_id')
-            category = Category.query.get(category_id)
+            category_name = data.get('category_name') 
+            category = Category.query.filter_by(name=category_name).first()
             if not category:
                 return {'error': 'Category not found'}, 404
+            
+            is_free = data.get('is_free', False)
+
+            if is_free:
+                price=0
+            else:
+                price = data.get('price')
+                if not price or price <= 0:
+                    return {'error': 'Price must be greater than 0 for priced patterns'}, 422
+            
             pattern = Pattern(
                 title=data['title'],
                 description=data['description'],
-                price=data['price'],
+                price=price,
                 author=data['author'],
                 difficulty=data['difficulty'],
-                category=category
+                type=data['type'],
+                category=data["name"],
+                is_free=is_free
             )
             db.session.add(pattern)
             db.session.commit()
@@ -236,34 +248,44 @@ class UserById(Resource):
         
 # #! ALL PURCHASE RELATED ROUTES
 class Purchases(Resource):
-    def get(self, id):
+    def get(self):
         try:
-            serialized_purchases = purchases_schema.dump(Purchase.query)
+            if "user_id" not in session:
+                return {"error": "User not logged in"}, 401
+            user_id = session["user_id"]
+            purchases = Purchase.query.filter_by(user_id=user_id).all()
+            serialized_purchases = purchases_schema.dump(purchases)
             return serialized_purchases, 200
         except Exception as e:
             return {"error": str(e)}, 400
     
-    #! not needed?
-    # def patch(self, id):
-    #     try:
-    #         pass
-    #     except Exception as e:
-    #         return {"error": str(e)}, 400
-            
-    #! not needed?
-    # def delete(self, id):
-    #     try:
-    #         pass
-    #     except Exception as e:
-    #         return {"error": str(e)}, 400
+    def post():
+        try:
+            data = request.json
+            user_id = data.get("user_id")
+            pattern_id = data.get("pattern_id")
+            price = data.get("price")
+            status = data.get("status", "pending")  # Default status to "pending" if not provided
+
+            # Create a new Purchase record
+            purchase = Purchase(user_id=user_id, pattern_id=pattern_id, price=price, status=status)
+            db.session.add(purchase)
+            db.session.commit()
+
+            return {"message": "Purchase successfully created"}, 201
+        except Exception as e:
+            db.session.rollback()
+            return {"error": str(e)}, 422
 
 class PurchaseById(Resource):
     def get(self, id):
         try:
-            purchase = Purchase.query.filter_by(pattern_id=id).first()
+            purchase = Purchase.query.filter_by(id=id).first()
             if purchase:
+                user = purchase.user
+                pattern = purchase.pattern
                 confirm_purchase = purchase.pattern.title
-                return {"message": f"You have purchased {confirm_purchase}"}, 200
+                return {"message": f"You have purchased {pattern.title} by {user.username}", "user": user.to_dict(), "pattern": pattern.to_dict()}, 200
             else:
                 return {"error": f"Purchase {id} not found"}, 404
         except Exception as e:
@@ -280,6 +302,7 @@ stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 @app.route('/create-checkout-session/<int:id>', methods=['POST'])
 def create_checkout_session(id):
     try:
+        pattern_id = id
         pattern_to_purchase = Pattern.query.get(id)
         checkout_session = stripe.checkout.Session.create(
             line_items=[
@@ -303,7 +326,7 @@ api.add_resource(PatternById, "/patterns/<int:id>")
 api.add_resource(Users, "/users")
 api.add_resource(UserById, "/users/<int:id>")
 api.add_resource(Purchases, "/purchases")
-api.add_resource(PurchaseById, "/purchases/<int:id>")
+api.add_resource(PurchaseById, "/success")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

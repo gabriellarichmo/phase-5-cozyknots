@@ -21,15 +21,24 @@ class Category(db.Model, SerializerMixin):
 
 
     @classmethod
-    def create_category(cls, name, description, parent_id=None):
-        category = cls(name=name, description=description, parent_id=parent_id)
+    def create_category(cls, name, parent_id=None):
+        category = cls(name=name, parent_id=parent_id)
         db.session.add(category)
         db.session.commit()
         return category
+    
+    @validates("name")
+    def validate_type(self, _, name):
+        if not isinstance(name, str):
+            raise TypeError("Name must be of type string.")
+        elif name not in ["Sweaters", "Amigurumi", "Mittens", "Scarves", "Socks", "Hats", "Other"]:
+            raise ValueError("Category name must be any of: Sweaters, Amigurumi, Mittens, Scarves, Socks, Hats, or Other.")
+        else:
+            return name
 
-@event.listens_for(Category.__table__, 'after_create')
-def create_initial_categories(*args, **kwargs):
-    knit = Category(name='Knit', description='Knitting related patterns')
-    crochet = Category(name='Crochet', description='Crocheting related patterns')
-    db.session.add_all([knit, crochet])
-    db.session.commit()
+# @event.listens_for(Category.__table__, 'after_create')
+# def create_initial_categories(*args, **kwargs):
+#     knit = Category(name='Knit', description='Knitting related patterns')
+#     crochet = Category(name='Crochet', description='Crocheting related patterns')
+#     db.session.add_all([knit, crochet])
+#     db.session.commit()

@@ -3,6 +3,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 from config import flask_bcrypt, db
+from sqlalchemy import event
 import stripe
 import os
 
@@ -13,7 +14,7 @@ class Pattern(db.Model, SerializerMixin):
   title = db.Column(db.String(50), nullable=False)
   description = db.Column(db.String(250), nullable=False)
   price = db.Column(db.Float)
-  is_free = db.Column(db.Boolean)
+  is_free = db.Column(db.Boolean, default=False)
   author = db.Column(db.String)
   difficulty = db.Column(db.String)
   type = db.Column(db.String)
@@ -59,14 +60,14 @@ class Pattern(db.Model, SerializerMixin):
       return title
   
   @validates("price")
-  def validate_price(self, _, price):
-    if not isinstance(price, float):
-      raise TypeError("Price must be a float")
-    elif price > 10:
-      raise ValueError("Price cannot be more than 10 dollars.")
+  def validate_price(self, key, price):
+    if not self.is_free and (price is None or not isinstance(price, float)):
+        raise ValueError("Price must be provided and must be a float for paid patterns.")
+    elif not self.is_free and price > 10:
+        raise ValueError("Price cannot be more than 10 dollars for paid patterns.")
     else:
-      return price
-  
+        return price
+
   @validates("difficulty")
   def validate_difficulty(self, _, difficulty):
     if not isinstance(difficulty, str):
@@ -109,3 +110,10 @@ class Pattern(db.Model, SerializerMixin):
           self.stripe_price_id = stripe_price.id
 
           db.session.commit()
+
+@event.listens_for(Pattern.__table__, 'after_create')
+def create_initial_categories(*args, **kwargs):
+    knit = Pattern(type='Knit', description='Knitting related patterns')
+    crochet = Pattern(type='Crochet', description='Crocheting related patterns')
+    db.session.add_all([knit, crochet])
+    db.session.commit()
