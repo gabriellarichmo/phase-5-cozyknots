@@ -16,8 +16,8 @@ class PurchaseSchema(ma.SQLAlchemyAutoSchema):
     user_id = fields.Integer(required=True, validate=validate.Range(min=1, error="Invalid user ID"))
     pattern_id = fields.Integer(required=True, validate=validate.Range(min=1, error="Invalid pattern ID"))
     price = fields.Float(required=True, validate=validate.Range(min=0, error="Price must be a positive number"))
-    payment_method = fields.String(required=True)
     status = fields.String(required=True, validate=validate.OneOf(["Pending", "Completed", "Canceled"], error="Invalid status"))
+    purchase_date = fields.DateTime(required=True)
 
 purchase_schema = PurchaseSchema()
 purchases_schema = PurchaseSchema(many=True)

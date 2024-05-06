@@ -10,6 +10,7 @@ from werkzeug.security import generate_password_hash
 from config import app, db, api
 import os
 import stripe
+from datetime import datetime
 # Models
 from models.user import User
 from models.pattern import Pattern
@@ -280,12 +281,14 @@ class Purchases(Resource):
 class PurchaseById(Resource):
     def get(self, id):
         try:
+            # import ipdb; ipdb.set_trace()
+            user = User.query.get(session["user_id"])
             purchase = Purchase.query.filter_by(id=id).first()
             if purchase:
-                user = purchase.user
-                pattern = purchase.pattern
-                confirm_purchase = purchase.pattern.title
-                return {"message": f"You have purchased {pattern.title} by {user.username}", "user": user.to_dict(), "pattern": pattern.to_dict()}, 200
+                purchase.status = "Completed"
+                purchase.purchase_date = datetime.now()
+                # return redirect("http://localhost:3000/success"), 200
+                return purchases_schema.dump(user.purchases), 200
             else:
                 return {"error": f"Purchase {id} not found"}, 404
         except Exception as e:
@@ -296,14 +299,21 @@ class Categories(Resource):
         categories = [category.to_dict() for category in Category.query]
         return categories, 200
 
-YOUR_DOMAIN = "http://localhost:5555"
+YOUR_DOMAIN = "http://localhost:3000"
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 
 @app.route('/create-checkout-session/<int:id>', methods=['POST'])
 def create_checkout_session(id):
     try:
-        pattern_id = id
-        pattern_to_purchase = Pattern.query.get(id)
+        pattern_to_purchase = db.session.get(Pattern, id)
+        new_purchase = purchase_schema.load({
+            "user_id": session["user_id"],
+            "pattern_id": pattern_to_purchase.id,
+            "price": pattern_to_purchase.price,
+            "status": "Pending",
+        }, partial=True)
+        db.session.add(new_purchase)
+        db.session.commit()
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
@@ -312,10 +322,11 @@ def create_checkout_session(id):
                 }
             ],
             mode='payment',
-            success_url=YOUR_DOMAIN + "/success",
+            success_url=YOUR_DOMAIN + f"/success/{new_purchase.id}",
             cancel_url=YOUR_DOMAIN + "/cancelled"
         )
         return redirect(checkout_session.url, code=303)
+        import ipdb; ipdb.set_trace()
     except Exception as e:
         return {"message": str(e)}
 
@@ -326,7 +337,7 @@ api.add_resource(PatternById, "/patterns/<int:id>")
 api.add_resource(Users, "/users")
 api.add_resource(UserById, "/users/<int:id>")
 api.add_resource(Purchases, "/purchases")
-api.add_resource(PurchaseById, "/success")
+api.add_resource(PurchaseById, "/success/<int:id>")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

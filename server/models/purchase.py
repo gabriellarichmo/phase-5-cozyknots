@@ -15,8 +15,6 @@ class Purchase(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     pattern_id = db.Column(db.Integer, db.ForeignKey("patterns.id"), nullable=False)
     price = db.Column(db.Float)
-    # stripe_product_id = db.Column(db.String)
-    # stripe_price_id = db.Column(db.String)
     status = db.Column(db.String, nullable=False)
     purchase_date = db.Column(db.DateTime, default=db.func.now())
 
