@@ -5,6 +5,8 @@ from sqlalchemy.orm import validates
 from config import flask_bcrypt, db
 from .user import User
 from .pattern import Pattern
+import stripe
+import os
 
 class Purchase(db.Model, SerializerMixin):
     __tablename__ = "purchases"
@@ -13,7 +15,8 @@ class Purchase(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     pattern_id = db.Column(db.Integer, db.ForeignKey("patterns.id"), nullable=False)
     price = db.Column(db.Float)
-    payment_method = db.Column(db.String)
+    # stripe_product_id = db.Column(db.String)
+    # stripe_price_id = db.Column(db.String)
     status = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -51,3 +54,28 @@ class Purchase(db.Model, SerializerMixin):
             raise ValueError(f"{pattern_id} has to correspond to an existing pattern")
         else:
             return pattern_id
+        
+    # def __init__(self, *args, **kwargs):
+    #     super(Purchase, self).__init__(*args, **kwargs)
+    #     self. create_stripe_product_and_price()
+
+    # def create_stripe_product_and_price(self):
+    #     stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
+
+    #     if not self.stripe_product_id or not self.stripe_price_id:
+    #         stripe_product = stripe.Product.create(
+    #             name =self.title,
+    #             description=self.description,
+    #             type="good",
+    #         )
+
+    #         stripe_price = stripe.Price.create(
+    #             product=stripe_product.id,
+    #             unit_amount=int(self.price * 100),
+    #             currency="usd",
+    #         )
+
+    #         self.stripe_product_id = stripe_product.id
+    #         self.stripe_price_id = stripe_price.id
+
+    #         db.session.commit()

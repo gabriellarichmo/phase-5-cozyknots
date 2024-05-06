@@ -3,7 +3,7 @@
 # Standard library imports
 
 # Remote library imports
-from flask import request, g, session, send_file, abort, jsonify
+from flask import request, g, session, send_file, abort, jsonify, redirect
 from flask_restful import Resource
 from functools import wraps
 from werkzeug.security import generate_password_hash
@@ -54,20 +54,6 @@ def login_required(func):
 # #! ALL REGISTRATION RELATED ROUTES
 @app.route("/signup", methods=["POST"])
 def signup():
-    # try:
-    #     data = request.json
-    #     username = data.get("username")
-    #     email = data.get("email")
-    #     password = data.get("password")
-    #     user = User(username=username, email=email)
-    #     user.password_hash = password
-    #     db.session.add(user)
-    #     db.session.commit()
-    #     session["user_id"] = user.id
-    #     return user.to_dict(), 201
-    # except Exception as e:
-    #     db.session.rollback()
-    #     return {"message": str(e)}, 422
     try:
         data = request.json
         user = user_schema.load(data, partial=True)
@@ -287,6 +273,28 @@ class Categories(Resource):
     def get(self):
         categories = [category.to_dict() for category in Category.query]
         return categories, 200
+
+YOUR_DOMAIN = "http://localhost:5555"
+stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
+
+@app.route('/create-checkout-session/<int:id>', methods=['POST'])
+def create_checkout_session(id):
+    try:
+        pattern_to_purchase = Pattern.query.get(id)
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    'price': pattern_to_purchase.stripe_price_id,
+                    'quantity': 1
+                }
+            ],
+            mode='payment',
+            success_url=YOUR_DOMAIN + "/success",
+            cancel_url=YOUR_DOMAIN + "/cancelled"
+        )
+        return redirect(checkout_session.url, code=303)
+    except Exception as e:
+        return {"message": str(e)}
 
 
 api.add_resource(Categories, "/categories")

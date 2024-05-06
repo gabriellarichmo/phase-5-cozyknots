@@ -3,6 +3,8 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 from config import flask_bcrypt, db
+import stripe
+import os
 
 class Pattern(db.Model, SerializerMixin):
   __tablename__ = "patterns"
@@ -16,6 +18,8 @@ class Pattern(db.Model, SerializerMixin):
   difficulty = db.Column(db.String)
   type = db.Column(db.String)
   image = db.Column(db.String)
+  stripe_product_id = db.Column(db.String)
+  stripe_price_id = db.Column(db.String)
   created_at = db.Column(db.DateTime, server_default=db.func.now())
   updated_at = db.Column(db.DateTime, onupdate=db.func.now())
   category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
@@ -80,3 +84,28 @@ class Pattern(db.Model, SerializerMixin):
       raise ValueError("Type must be either Knit or Crochet.")
     else:
       return type
+
+  def __init__(self, *args, **kwargs):
+      super(Pattern, self).__init__(*args, **kwargs)
+      self. create_stripe_product_and_price()
+
+  def create_stripe_product_and_price(self):
+      stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
+
+      if not self.stripe_product_id or not self.stripe_price_id:
+          stripe_product = stripe.Product.create(
+              name =self.title,
+              description=self.description,
+              type="good",
+          )
+
+          stripe_price = stripe.Price.create(
+              product=stripe_product.id,
+              unit_amount=int(self.price * 100),
+              currency="usd",
+          )
+
+          self.stripe_product_id = stripe_product.id
+          self.stripe_price_id = stripe_price.id
+
+          db.session.commit()
