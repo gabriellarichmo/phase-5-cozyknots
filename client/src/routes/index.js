@@ -10,7 +10,6 @@ import NewPatternForm from "../components/pattern/NewPatternForm";
 import MyCart from "../components/purchase/MyCart";
 import EditProfile from "../components/user/EditProfile";
 
-
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -45,7 +44,7 @@ export const router = createBrowserRouter([
       //   element: <PatternCard />
       // },
       {
-        path: "/patterns/new",
+        path: "/patterns",
         element: <NewPatternForm />,
       },
       // {

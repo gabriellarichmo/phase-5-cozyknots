@@ -44,69 +44,39 @@ if __name__ == '__main__':
         seed_cat()
         categories = Category.query.all()
 
-        category_sweaters_crochet = Category.query.filter_by(name="Sweaters", description="Crochet sweater patterns").first()
-        if not category_sweaters_crochet:
-            category_sweaters_crochet = Category(name="Sweaters", description="Crochet sweater patterns")
-            db.session.add(category_sweaters_crochet)
+        category_sweaters = Category.query.filter_by(name="Sweaters", description="Sweater patterns").first()
+        if not category_sweaters:
+            category_sweaters = Category(name="Sweaters", description="Sweater patterns")
+            db.session.add(category_sweaters)
             db.session.commit()
 
-        category_sweaters_knit = Category.query.filter_by(name="Sweaters", description="Knit sweater patterns").first()
-        if not category_sweaters_knit:
-            category_sweaters_knit = Category(name="Sweaters", description="Knit sweater patterns")
-            db.session.add(category_sweaters_knit)
+        category_mittens = Category.query.filter_by(name="Mittens", description="Mitten patterns").first()
+        if not category_mittens:
+            category_mittens = Category(name="Mittens", description="Mitten patterns")
+            db.session.add(category_mittens)
             db.session.commit()
 
-        category_mittens_crochet = Category.query.filter_by(name="Mittens", description="Crochet mitten patterns").first()
-        if not category_mittens_crochet:
-            category_mittens_crochet = Category(name="Mittens", description="Crochet mitten patterns")
-            db.session.add(category_mittens_crochet)
+        category_hats = Category.query.filter_by(name="Hats", description="Hat patterns").first()
+        if not category_hats:
+            category_hats = Category(name="Hats", description="Hat patterns")
+            db.session.add(category_hats)
             db.session.commit()
 
-        category_mittens_knit = Category.query.filter_by(name="Mittens", description="Knit mitten patterns").first()
-        if not category_mittens_knit:
-            category_mittens_knit = Category(name="Mittens", description="Knit mitten patterns")
-            db.session.add(category_mittens_knit)
+        category_socks = Category.query.filter_by(name="Socks", description="Sock patterns").first()
+        if not category_socks:
+            category_socks = Category(name="Socks", description="Sock patterns")
+            db.session.add(category_socks)
             db.session.commit()
 
-        category_hats_knit = Category.query.filter_by(name="Hats", description="Knit hat patterns").first()
-        if not category_hats_knit:
-            category_hats_knit = Category(name="Hats", description="Knit hat patterns")
-            db.session.add(category_hats_knit)
+        category_scarves = Category.query.filter_by(name="Scarves", description="Scarf patterns").first()
+        if not category_scarves:
+            category_scarves = Category(name="Scarves", description="Scarf patterns")
+            db.session.add(category_scarves)
             db.session.commit()
 
-        category_hats_crochet = Category.query.filter_by(name="Hats", description="Crochet hat patterns").first()
-        if not category_hats_crochet:
-            category_hats_crochet = Category(name="Hats", description="Crochet hat patterns")
-            db.session.add(category_hats_crochet)
-            db.session.commit()
-
-        category_socks_crochet = Category.query.filter_by(name="Socks", description="Crochet sock patterns").first()
-        if not category_socks_crochet:
-            category_socks_crochet = Category(name="Socks", description="Crochet sock patterns")
-            db.session.add(category_socks_crochet)
-            db.session.commit()
-
-        category_socks_knit = Category.query.filter_by(name="Socks", description="Knit sock patterns").first()
-        if not category_socks_knit:
-            category_socks_knit = Category(name="Socks", description="Knit sock patterns")
-            db.session.add(category_socks_knit)
-            db.session.commit()
-
-        category_scarves_crochet = Category.query.filter_by(name="Scarves", description="Crochet scarf patterns").first()
-        if not category_scarves_crochet:
-            category_scarves_crochet = Category(name="Scarves", description="Crochet scarf patterns")
-            db.session.add(category_scarves_crochet)
-            db.session.commit()
-
-        category_scarves_knit = Category.query.filter_by(name="Scarves", description="Knit scarf patterns").first()
-        if not category_scarves_knit:
-            category_scarves_knit = Category(name="Scarves", description="Knit scarf patterns")
-            db.session.add(category_scarves_knit)
-            db.session.commit()
-
-        category_amigurumi = Category.query.filter_by(name="Amigurumi", description="Crochet amigurumi patterns").first()
+        category_amigurumi = Category.query.filter_by(name="Amigurumi", description="Amigurumi patterns").first()
         if not category_amigurumi:
-            category_amigurumi = Category(name="Amigurumi", description="Crochet amigurumi patterns")
+            category_amigurumi = Category(name="Amigurumi", description="Amigurumi patterns")
             db.session.add(category_amigurumi)
             db.session.commit()
 
@@ -150,7 +120,7 @@ if __name__ == '__main__':
             image="raglan.JPEG",
             difficulty="Beginner",
             type="Knit",
-            category_id=Category.query.filter_by(name="Sweaters", description="Knit sweater patterns").first().id
+            category_id=Category.query.filter_by(name="Sweaters", description="Sweater patterns").first().id
         )
         p3 = Pattern(
             title="Bubble Cardigan",
@@ -160,7 +130,7 @@ if __name__ == '__main__':
             image="bubble_cardi.JPEG",
             difficulty="Intermediate",
             type="Crochet",
-            category_id=Category.query.filter_by(name="Sweaters", description="Crochet sweater patterns").first().id
+            category_id=Category.query.filter_by(name="Sweaters", description="Sweater patterns").first().id
         )
         p4 = Pattern(
             title="Mushroom Keychain",

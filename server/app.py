@@ -114,9 +114,10 @@ class Patterns(Resource):
     def post(self):
         try:
             data = request.json
-            category_name = data.get('name') 
-            category = Category.query.filter_by(name=category_name).first()
-            print(category_name)
+            category_id = data.get('category_id') 
+            category = Category.query.filter_by(id=category_id).first()
+            print(data)
+            print(category)
             if not category:
                 return {'error': 'Category not found'}, 404
             
@@ -126,13 +127,14 @@ class Patterns(Resource):
                 price=0
             else:
                 price = data.get('price')
+                print(price)
                 if not price or price <= 0:
                     return {'error': 'Price must be greater than 0 for priced patterns'}, 422
             
             pattern = Pattern(
                 title=data['title'],
                 description=data['description'],
-                price=price,
+                price=float(price),
                 author=data['author'],
                 difficulty=data['difficulty'],
                 type=data['type'],
@@ -143,6 +145,7 @@ class Patterns(Resource):
             db.session.commit()
             return pattern_schema.dump(pattern), 201
         except Exception as e:
+            print(e)
             db.session.rollback()
             return {"error": str(e)}, 422
         

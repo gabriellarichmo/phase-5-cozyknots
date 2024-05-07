@@ -10,18 +10,18 @@ const NewPatternForm = () => {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     fetch("/categories")
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setCategories(data);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
   }, []);
-  
+
   const patternSchema = object({
     title: string()
       .max(50, "Title cannot be longer than 50 characters")
@@ -50,6 +50,7 @@ const NewPatternForm = () => {
     initialValues,
     validationSchema: patternSchema,
     onSubmit: (formData) => {
+      console.log(formData);
       setIsSubmitting(true);
       fetch("/patterns", {
         method: "POST",
@@ -60,7 +61,7 @@ const NewPatternForm = () => {
       })
         .then((resp) => {
           if (resp.ok) {
-            console.log(formData)
+            console.log(formData);
             navigate("/");
           } else {
             return resp.json().then((error) => {
@@ -80,7 +81,6 @@ const NewPatternForm = () => {
   const toggleForm = () => {
     setEditForm((prevForm) => !prevForm);
   };
-
 
   return (
     <div className="pattern-form-page">
@@ -122,15 +122,15 @@ const NewPatternForm = () => {
 
               <label>Category</label>
               <select
-                name="category_name"
+                name="category_id" // Use category_id instead of category_name
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.category_name}
+                value={formik.values.category_id}
                 className="pattern-input"
               >
                 <option value="">Select a category</option>
                 {categories.map((category) => (
-                  <option key={category.id} value={category.name}>
+                  <option key={category.id} value={category.id}>
                     {category.name}
                   </option>
                 ))}
@@ -201,8 +201,8 @@ const NewPatternForm = () => {
                 className="pattern-input"
               >
                 <option value="">Select type</option>
-                <option value="knit">Knit</option>
-                <option value="crochet">Crochet</option>
+                <option value="Knit">Knit</option>
+                <option value="Crochet">Crochet</option>
               </select>
               {formik.errors.type && formik.touched.type && (
                 <div className="error-message show">{formik.errors.type}</div>
