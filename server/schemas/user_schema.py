@@ -25,10 +25,6 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         only=("id",),
     )
     
-    # username = fields.String(required=True, validate=validate.Length(min=2,max=20))
-    # email = fields.String(required=True, validate=[validate.Email()])
-    # password_hash = fields.String(data_key="password_hash", required=True, validate=validate.Length(min=5), load_only=True)
-
     username = fields.String(required=True, validate=validate.Length(min=2, max=20), 
                             error_messages={"required": "Username is required.",
                                             "validate.Length": "Username must be between 2 and 20 characters long."})

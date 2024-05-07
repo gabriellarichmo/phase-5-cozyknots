@@ -13,20 +13,9 @@ class CategorySchema(ma.SQLAlchemyAutoSchema):
     model = Category
     load_instance = True
 
-  # knit = Category(name="Knit")
-  # crochet = Category(name="Crochet")
 
-  # db.session.add_all([knit, crochet])
-  # db.session.commit()
+  name = fields.String(required=True, validate=validate.OneOf(["Sweaters", "Amigurumi", "Mittens", "Scarves", "Socks", "Hats", "Other"], error="Category name must be any of: Sweaters, Amigurumi, Mittens, Scarves, Socks, Hats, or Other."))
 
-  # knit_patterns = Category(name="Knit Patterns", parent=knit)
-  # crochet_patterns = Category(name="Crochet Patterns", parent=crochet)
-
-  # db.session.add_all([knit_patterns, crochet_patterns])
-  # db.session.commit()
-
-  # knit_category = Category.query.filter_by(name="Knit").first()
-  # knit_subcategories = knit_category.children
 
 category_schema = CategorySchema()
 categories_schema = CategorySchema(many=True)

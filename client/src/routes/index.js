@@ -5,11 +5,11 @@ import Registration from "../components/authentication/Registration";
 import Error from "../components/errors/Error";
 import UserCard from "../components/user/UserCard";
 import Community from "../components/user/Community";
-// import PatternCard from "../components/patterns/PatternCard";
-import NewPatternForm from "../components/pattern/NewPatternForm";
 import PurchaseCard from "../components/purchase/PurchaseCard";
+import NewPatternForm from "../components/pattern/NewPatternForm";
 import MyCart from "../components/purchase/MyCart";
 import EditProfile from "../components/user/EditProfile";
+
 
 export const router = createBrowserRouter([
   {
@@ -20,11 +20,11 @@ export const router = createBrowserRouter([
       {
         path: "/",
         index: true,
-        element: <Home />
+        element: <Home />,
       },
       {
         path: "/registration",
-        element: <Registration />
+        element: <Registration />,
       },
       {
         path: "/users/:userId",
@@ -32,13 +32,13 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "/edit",
-            element: <EditProfile />
-          }
-        ]
+            element: <EditProfile />,
+          },
+        ],
       },
       {
         path: "/community",
-        element: <Community />
+        element: <Community />,
       },
       // {
       //   path: "/patterns/:patternId",
@@ -46,16 +46,26 @@ export const router = createBrowserRouter([
       // },
       {
         path: "/patterns/new",
-        element: <NewPatternForm />
+        element: <NewPatternForm />,
       },
-      {
-        path: "/purchases/:purchaseId",
-        element: <PurchaseCard />
-      },
+      // {
+      //   path: "/purchases/:purchaseId",
+      //   element: <PurchaseCard />,
+      // },
       {
         path: "/cart",
-        element: <MyCart />
-      }
+        element: <MyCart />,
+        // children: [
+        // {
+        //   path: "/success",
+        //   element: <PurchaseCard />,
+        // },
+        // ],
+      },
+      {
+        path: "/success/:purchaseId",
+        element: <PurchaseCard />,
+      },
     ],
   },
 ]);

@@ -1,5 +1,18 @@
-.reg-form-container{
-    font-family: 'Georgia', serif;
+pattern-form-page {
+  margin: 0;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  width: 100%;
+  /* background-image: url("https://images.unsplash.com/photo-1620633437938-be73c35eb77e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); */
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-attachment: fixed;
+  background-position: top left;
+}
+
+.pattern-form-container{
+  font-family: 'Georgia', serif;
 }
 
 #patternForm{
@@ -14,7 +27,7 @@
   align-items: center;
 }
 
-.reg-form-body{
+.pattern-form-body{
 	margin: 0;
 	padding: 0;
 	display: flex;
@@ -134,4 +147,8 @@ label{
 
 .button-55-1:focus {
   box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
+}
+
+.new-pattern-banner{
+  color: white
 }

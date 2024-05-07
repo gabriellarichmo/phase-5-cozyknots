@@ -18,17 +18,12 @@ from config import app, db
 
 def seed_cat():
     categories = [
-        {"name": "Sweaters", "description": "Crochet sweater patterns"},
-        {"name": "Sweaters", "description": "Knit sweater patterns"},
-        {"name": "Mittens", "description": "Crochet mitten patterns"},
-        {"name": "Mittens", "description": "Knit mitten patterns"},
-        {"name": "Hats", "description": "Knit hat patterns"},
-        {"name": "Hats", "description": "Crochet hat patterns"},
-        {"name": "Socks", "description": "Crochet sock patterns"},
-        {"name": "Socks", "description": "Knit sock patterns"},
-        {"name": "Scarves", "description": "Crochet scarf patterns"},
-        {"name": "Scarves", "description": "Knit scarf patterns"},
-        {"name": "Amigurumi", "description": "Crochet amigurumi patterns"},
+        {"name": "Sweaters", "description": "Sweater patterns"},
+        {"name": "Mittens", "description": "Mitten patterns"},
+        {"name": "Hats", "description": "Hat patterns"},
+        {"name": "Socks", "description": "Sock patterns"},
+        {"name": "Scarves", "description": "Scarf patterns"},
+        {"name": "Amigurumi", "description": "Amigurumi patterns"},
         {"name": "Other", "description": "Miscellaneous patterns"},
     ]
     for cat_data in categories:

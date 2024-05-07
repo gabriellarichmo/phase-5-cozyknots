@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
         console.error("Error fetching current user:", error);
         toast.error("Please log in");
         // if (!currentUser) {
-          navigate("/registration");
+          // navigate("/registration");
         // }
       }
     };

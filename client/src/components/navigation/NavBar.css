@@ -3,38 +3,43 @@
 }
 
 .nav {
-  background-color: #8faab3; /* Background color of the navigation bar */
-  color: #070707; /* Text color */
+  background-color: #8faab3;
+  color: #070707; 
+  display: flex;
+  flex-flow: nowrap;
+  justify-content: left;
 }
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /* float: right; */
   padding: 10px 20px;
 }
 
 .navbar a {
   color: #050505;
   text-decoration: none;
-  margin-right: 20px; /* Adjust the spacing between navigation links */
+  margin-right: 20px; 
 }
 
 .navbar a:hover {
-  color: #ccc; /* Color of navigation links on hover */
+  color: #ccc; 
 }
 
 .container {
   display: flex;
   align-items: center;
+  float: right;
 }
 
 .container a {
   color: #000000;
   text-decoration: none;
-  margin-right: 20px; /* Adjust the spacing between profile and logout links */
+  margin-right: 20px; 
 }
 
 .container a:hover {
-  color: #ccc; /* Color of profile and logout links on hover */
+  color: #ccc; 
 }

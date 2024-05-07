@@ -114,8 +114,9 @@ class Patterns(Resource):
     def post(self):
         try:
             data = request.json
-            category_name = data.get('category_name') 
+            category_name = data.get('name') 
             category = Category.query.filter_by(name=category_name).first()
+            print(category_name)
             if not category:
                 return {'error': 'Category not found'}, 404
             
@@ -135,7 +136,7 @@ class Patterns(Resource):
                 author=data['author'],
                 difficulty=data['difficulty'],
                 type=data['type'],
-                category=data["name"],
+                category=category,
                 is_free=is_free
             )
             db.session.add(pattern)
@@ -275,6 +276,15 @@ class Favorites(Resource):
             db.session.rollback()
             return {"error": str(e)}, 422
         
+@app.route("/favorites/<int:user_id>", methods=["GET"])
+def get_favorited_patterns(user_id):
+    try:
+        favorited_patterns = Favorite.query.filter_by(user_id=user_id).all()
+        serialized_patterns = [pattern.to_dict() for pattern in favorited_patterns]
+        return jsonify({"favoritedPatterns": serialized_patterns}), 200
+    except Exception as e:
+        return {"error": str(e)}, 500
+        
 # #! ALL PURCHASE RELATED ROUTES
 class Purchases(Resource):
     def get(self):
@@ -324,8 +334,11 @@ class PurchaseById(Resource):
         
 class Categories(Resource):
     def get(self):
-        categories = [category.to_dict() for category in Category.query]
-        return categories, 200
+        try:
+            serialized_category = categories_schema.dump(Category.query)
+            return serialized_category, 200
+        except Exception as e:
+            return {"error": str(e)}, 400
 
 YOUR_DOMAIN = "http://localhost:3000"
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")

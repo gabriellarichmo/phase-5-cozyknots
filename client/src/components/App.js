@@ -16,11 +16,14 @@ function App() {
   const { currentUser } = useUserContext();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate("/registration");
-    }
-  }, [currentUser, navigate]);
+// display template page "go login" or blank page
+
+
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     navigate("/registration");
+  //   }
+  // }, [currentUser, navigate]);
 
   useEffect(() => {
     fetch("/patterns")

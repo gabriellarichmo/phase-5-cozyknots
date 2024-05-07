@@ -42,6 +42,7 @@ const NewPatternForm = () => {
     price: "",
     author: "",
     difficulty: "",
+    type: "",
     category_id: "",
   };
 
@@ -59,6 +60,7 @@ const NewPatternForm = () => {
       })
         .then((resp) => {
           if (resp.ok) {
+            console.log(formData)
             navigate("/");
           } else {
             return resp.json().then((error) => {
@@ -81,99 +83,157 @@ const NewPatternForm = () => {
 
 
   return (
-    <div>
-      <button className="button-55" onClick={toggleForm}>
-        {editForm ? "Cancel" : "Add a Pattern"}
-      </button>
-      {editForm && (
-        <form id="patternForm" onSubmit={formik.handleSubmit}>
-          <label htmlFor="title">Title</label>
-          <input
-            type="text"
-            name="title"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.title}
-            className="pattern-input"
-          />
-          {formik.errors.title && formik.touched.title && (
-            <div className="error-message show">{formik.errors.title}</div>
-          )}
-
-          <label>Description</label>
-          <input
-            type="text"
-            name="description"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.description}
-            className="pattern-input"
-          />
-          {formik.errors.description && formik.touched.description && (
-            <div className="error-message show">
-              {formik.errors.description}
-            </div>
-          )}
-
-          <label>Category</label>
-          <select
-            name="category_id"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.category_id}
-            className="pattern-input"
-          >
-            <option value="">Select a category</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-          {formik.errors.category_id && formik.touched.category_id && (
-            <div className="error-message show">
-              {formik.errors.category_id}
-            </div>
-          )}
-
-          <label>Price</label>
-          <input
-            type="number"
-            name="price"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.price}
-            className="pattern-input"
-          />
-
-          <label>Author</label>
-          <input
-            type="text"
-            name="author"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.author}
-            className="pattern-input"
-          />
-
-          <label>Difficulty</label>
-          <input
-            type="text"
-            name="difficulty"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.difficulty}
-            className="pattern-input"
-          />
-          {formik.errors.difficulty && formik.touched.difficulty && (
-            <div className="error-message show">{formik.errors.difficulty}</div>
-          )}
-
-          <button className="button-55-1" type="submit" disabled={isSubmitting}>
-            Submit
+    <div className="pattern-form-page">
+      <div className="pattern-form-body">
+        <div className="pattern-form-container">
+          <button className="button-55" onClick={toggleForm}>
+            {editForm ? "Cancel" : "Add a Pattern"}
           </button>
-        </form>
-      )}
+          {editForm && (
+            <form id="patternForm" onSubmit={formik.handleSubmit}>
+              <h2 className="new-pattern-banner">Add a new pattern!</h2>
+              <label htmlFor="title">Title</label>
+              <input
+                type="text"
+                name="title"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.title}
+                className="pattern-input"
+              />
+              {formik.errors.title && formik.touched.title && (
+                <div className="error-message show">{formik.errors.title}</div>
+              )}
+
+              <label>Description</label>
+              <input
+                type="text"
+                name="description"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.description}
+                className="pattern-input"
+              />
+              {formik.errors.description && formik.touched.description && (
+                <div className="error-message show">
+                  {formik.errors.description}
+                </div>
+              )}
+
+              <label>Category</label>
+              <select
+                name="category_name"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.category_name}
+                className="pattern-input"
+              >
+                <option value="">Select a category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+              {formik.errors.category_id && formik.touched.category_id && (
+                <div className="error-message show">
+                  {formik.errors.category_id}
+                </div>
+              )}
+
+              {/* <label>Price</label>
+              <input
+                type="number"
+                name="price"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.price}
+                className="pattern-input"
+              /> */}
+
+              <label>Is Free?</label>
+              <select
+                name="is_free"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.is_free}
+                className="pattern-input"
+              >
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+
+              {!formik.values.is_free && (
+                <div>
+                  <label>Price</label>
+                  <input
+                    type="number"
+                    name="price"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.price}
+                    className="pattern-input"
+                  />
+                  {formik.errors.price && formik.touched.price && (
+                    <div className="error-message show">
+                      {formik.errors.price}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <label>Author</label>
+              <input
+                type="text"
+                name="author"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.author}
+                className="pattern-input"
+              />
+
+              <label>Type</label>
+              <select
+                name="type"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.type}
+                className="pattern-input"
+              >
+                <option value="">Select type</option>
+                <option value="knit">Knit</option>
+                <option value="crochet">Crochet</option>
+              </select>
+              {formik.errors.type && formik.touched.type && (
+                <div className="error-message show">{formik.errors.type}</div>
+              )}
+
+              <label>Difficulty</label>
+              <input
+                type="text"
+                name="difficulty"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.difficulty}
+                className="pattern-input"
+              />
+              {formik.errors.difficulty && formik.touched.difficulty && (
+                <div className="error-message show">
+                  {formik.errors.difficulty}
+                </div>
+              )}
+
+              <button
+                className="button-55-1"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                Submit
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

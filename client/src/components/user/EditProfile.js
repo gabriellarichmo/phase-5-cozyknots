@@ -14,27 +14,27 @@ const EditProfile = () => {
   const navigate = useNavigate();
   
   const editProfileSchema = object({
-    username: string().max(20, "Username must be max of 20 characters"),
-    email: string().email(),
-    name: string().max(20),
-    bio: string().max(250),
-    avatar: string().url("Avatar must be a valid URL").notRequired() 
+    username: string().max(20, "Username must be max of 20 characters").optional(),
+    email: string().email().optional(),
+    name: string().max(20).optional(),
+    bio: string().max(250).optional(),
+    avatar: string().url("Avatar must be a valid URL").optional() 
   });
   
-  const initialValues = {
-    username: "",
-    email: "",
-    name: "",
-    bio: "",
-    avatar: "",
-  };
   // const initialValues = {
-  //   username: currentUser.username || "",
-  //   email: currentUser.email || "",
-  //   name: currentUser.name || "",
-  //   bio: currentUser.bio || "",
-  //   avatar: currentUser.avatar || "",
+  //   username: "",
+  //   email: "",
+  //   name: "",
+  //   bio: "",
+  //   avatar: "",
   // };
+  const initialValues = {
+    username: currentUser.username || "",
+    email: currentUser.email || "",
+    name: currentUser.name || "",
+    bio: currentUser.bio || "",
+    avatar: currentUser.avatar || "",
+  };
 
   const formik = useFormik({
     initialValues,
@@ -66,9 +66,6 @@ const EditProfile = () => {
       });
     },
   });
-
-
-
 
   const toggleForm = () => {
     setEditForm((prevForm) => !prevForm);

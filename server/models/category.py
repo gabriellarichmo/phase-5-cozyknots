@@ -11,8 +11,6 @@ class Category(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
-    # parent_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-
 
 
     patterns = db.relationship('Pattern', back_populates='category')
@@ -35,10 +33,3 @@ class Category(db.Model, SerializerMixin):
             raise ValueError("Category name must be any of: Sweaters, Amigurumi, Mittens, Scarves, Socks, Hats, or Other.")
         else:
             return name
-
-# @event.listens_for(Category.__table__, 'after_create')
-# def create_initial_categories(*args, **kwargs):
-#     knit = Category(name='Knit', description='Knitting related patterns')
-#     crochet = Category(name='Crochet', description='Crocheting related patterns')
-#     db.session.add_all([knit, crochet])
-#     db.session.commit()

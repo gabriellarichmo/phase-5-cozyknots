@@ -1,7 +1,13 @@
 import { useContext, useState } from "react";
 import { CartContext } from "./CartContext";
 // import { Link } from "react-router-dom"
-import StripePricingTable from "./StripePricingTable";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  PaymentElement,
+  Elements,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 import PatternCard from "../pattern/PatternCard";
 import "./MyCart.css"
 
@@ -12,17 +18,14 @@ const MyCart = () => {
     return (
         <div>
             <h1>My Cart</h1>
-            {stripeLoaded && (
-                <div>
-                    <StripePricingTable />
-                </div>
-            )}
             <div>
                 {cartItems.length > 0 ? (
                     cartItems.map((item) => (
                         <div key={item.id}>
                             <PatternCard {...item} />
-                            <button onClick={() => removeFromCart(item.id)}>Remove from My Cart</button>
+                            <form action={`/create-checkout-session/${item.id}`} method="POST">
+                                <button type="submit">Proceed to Checkout</button>
+                            </form>
                         </div>
                     ))
                 ) : (
