@@ -350,26 +350,36 @@ stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 def create_checkout_session(id):
     try:
         pattern_to_purchase = db.session.get(Pattern, id)
-        new_purchase = purchase_schema.load({
-            "user_id": session["user_id"],
-            "pattern_id": pattern_to_purchase.id,
-            "price": pattern_to_purchase.price,
-            "status": "Pending",
-        }, partial=True)
-        db.session.add(new_purchase)
-        db.session.commit()
-        checkout_session = stripe.checkout.Session.create(
-            line_items=[
-                {
-                    'price': pattern_to_purchase.stripe_price_id,
-                    'quantity': 1
-                }
-            ],
-            mode='payment',
-            success_url=YOUR_DOMAIN + f"/success/{new_purchase.id}",
-            cancel_url=YOUR_DOMAIN + "/cancelled"
-        )
-        return redirect(checkout_session.url, code=303)
+        if pattern_to_purchase:
+            new_purchase_data = {
+                "user_id": session.get("user_id"),
+                "pattern_id": pattern_to_purchase.id,
+                "price": pattern_to_purchase.price,
+                "status": "Pending",
+            }
+            new_purchase = Purchase(**new_purchase_data)
+        # new_purchase = purchase_schema.load({
+        #     "user_id": session["user_id"],
+        #     "pattern_id": pattern_to_purchase.id,
+        #     "price": pattern_to_purchase.price,
+        #     "status": "Pending",
+        # }, partial=True)
+            db.session.add(new_purchase)
+            db.session.commit()
+            checkout_session = stripe.checkout.Session.create(
+                line_items=[
+                    {
+                        'price': pattern_to_purchase.stripe_price_id,
+                        'quantity': 1
+                    }
+                ],
+                mode='payment',
+                success_url=YOUR_DOMAIN + f"/success/{new_purchase.id}",
+                cancel_url=YOUR_DOMAIN + "/cancelled"
+            )
+            return redirect(checkout_session.url, code=303)
+        else:
+            return {"message": "Pattern not found"}, 404
         import ipdb; ipdb.set_trace()
     except Exception as e:
         return {"message": str(e)}
