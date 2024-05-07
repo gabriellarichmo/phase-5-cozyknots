@@ -358,12 +358,7 @@ def create_checkout_session(id):
                 "status": "Pending",
             }
             new_purchase = Purchase(**new_purchase_data)
-        # new_purchase = purchase_schema.load({
-        #     "user_id": session["user_id"],
-        #     "pattern_id": pattern_to_purchase.id,
-        #     "price": pattern_to_purchase.price,
-        #     "status": "Pending",
-        # }, partial=True)
+            
             db.session.add(new_purchase)
             db.session.commit()
             checkout_session = stripe.checkout.Session.create(
