@@ -39,9 +39,9 @@ class Pattern(db.Model, SerializerMixin):
                         """
 
   # Relationships
-  # purchases = db.relationship('Purchase', back_populates='pattern', primaryjoin='Pattern.id == Purchase.pattern_id')
   purchases = db.relationship('Purchase', back_populates='pattern')
   category = db.relationship('Category', back_populates='patterns')
+  favorites = db.relationship('Favorite', back_populates='pattern')
   
   # Association Proxy
   users = association_proxy("purchases", "user")

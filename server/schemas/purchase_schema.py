@@ -7,6 +7,7 @@ class PurchaseSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Purchase
         load_instance = True
+        exclude = ("pattern_id", "user_id")
 
     user = fields.Nested(
         "UserSchema",

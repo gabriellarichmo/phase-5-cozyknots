@@ -16,6 +16,7 @@ from models.user import User
 from models.pattern import Pattern
 from models.purchase import Purchase
 from models.category import Category
+from models.favorites import Favorite
 # # Schemas
 from schemas.user_schema import user_schema, users_schema
 from schemas.pattern_schema import pattern_schema, patterns_schema
@@ -247,6 +248,33 @@ class UserById(Resource):
         except Exception as e:
             return {"error": str(e)}, 400
         
+#! FAVORITES
+class Favorites(Resource):
+    def post(self, pattern_id):
+        try:
+            user_id = session["user_id"]
+            favorite = Favorite(user_id=user_id, pattern_id=pattern_id)
+            db.session.add(favorite)
+            db.session.commit()
+            return {"message": "Pattern added to favorite successfully"}, 201
+        except Exception as e:
+            db.session.rollback()
+            return {"error": str(e)}, 422
+    
+    def delete(self, pattern_id):
+        try:
+            user_id = session["user_id"]
+            favorite = Favorite.query.filter_by(user_id=user_id, pattern_id=pattern_id).first()
+            if favorite:
+                db.session.delete(favorite)
+                db.session.commit()
+                return {"message": "Pattern removed from favorites successfully"}, 204
+            else:
+                return {"message": "Pattern is not in favorites"}, 404
+        except Exception as e:
+            db.session.rollback()
+            return {"error": str(e)}, 422
+        
 # #! ALL PURCHASE RELATED ROUTES
 class Purchases(Resource):
     def get(self):
@@ -338,6 +366,7 @@ api.add_resource(Users, "/users")
 api.add_resource(UserById, "/users/<int:id>")
 api.add_resource(Purchases, "/purchases")
 api.add_resource(PurchaseById, "/success/<int:id>")
+api.add_resource(Favorites, "/favorites/<int:pattern_id>")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

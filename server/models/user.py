@@ -22,7 +22,8 @@ class User(db.Model, SerializerMixin):
 
   # Relationships
   purchases = db.relationship("Purchase", back_populates="user")
-  
+  favorites = db.relationship('Favorite', back_populates='user')
+
   # Association Proxy
   patterns = association_proxy("purchases", "pattern")
 

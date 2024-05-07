@@ -16,7 +16,6 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         "PatternSchema",
         many=True,
         only=("id",),
-        # exclude=("user",),
     )
     
     purchases = fields.Nested(
