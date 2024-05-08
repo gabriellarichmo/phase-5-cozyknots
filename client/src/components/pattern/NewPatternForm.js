@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { object, string, number } from "yup";
 import { useFormik } from "formik";
@@ -9,6 +9,8 @@ const NewPatternForm = () => {
   const [editForm, setEditForm] = useState(false);
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetch("/categories")
@@ -43,6 +45,7 @@ const NewPatternForm = () => {
     author: "",
     difficulty: "",
     type: "",
+    image: "",
     category_id: "",
   };
 
@@ -104,7 +107,6 @@ const NewPatternForm = () => {
               {formik.errors.title && formik.touched.title && (
                 <div className="error-message show">{formik.errors.title}</div>
               )}
-
               <label>Description</label>
               <input
                 type="text"
@@ -119,10 +121,9 @@ const NewPatternForm = () => {
                   {formik.errors.description}
                 </div>
               )}
-
               <label>Category</label>
               <select
-                name="category_id" // Use category_id instead of category_name
+                name="category_id"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.category_id}
@@ -140,7 +141,6 @@ const NewPatternForm = () => {
                   {formik.errors.category_id}
                 </div>
               )}
-
               {/* <label>Price</label>
               <input
                 type="number"
@@ -150,7 +150,6 @@ const NewPatternForm = () => {
                 value={formik.values.price}
                 className="pattern-input"
               /> */}
-
               <label>Is Free?</label>
               <select
                 name="is_free"
@@ -162,7 +161,6 @@ const NewPatternForm = () => {
                 <option value="false">No</option>
                 <option value="true">Yes</option>
               </select>
-
               {!formik.values.is_free && (
                 <div>
                   <label>Price</label>
@@ -181,7 +179,6 @@ const NewPatternForm = () => {
                   )}
                 </div>
               )}
-
               <label>Author</label>
               <input
                 type="text"
@@ -191,7 +188,6 @@ const NewPatternForm = () => {
                 value={formik.values.author}
                 className="pattern-input"
               />
-
               <label>Type</label>
               <select
                 name="type"
@@ -207,7 +203,6 @@ const NewPatternForm = () => {
               {formik.errors.type && formik.touched.type && (
                 <div className="error-message show">{formik.errors.type}</div>
               )}
-
               <label>Difficulty</label>
               <input
                 type="text"
@@ -223,6 +218,57 @@ const NewPatternForm = () => {
                 </div>
               )}
 
+              {/* <label>Pattern File URL</label>
+              <input
+                type="text"
+                name="pattern_file_url"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.pattern_file_url}
+                className="pattern-input"
+              />
+              {formik.errors.pattern_file_url &&
+                formik.touched.pattern_file_url && (
+                  <div className="error-message show">
+                    {formik.errors.pattern_file_url}
+                  </div>
+                )} */}
+
+              <label>Pattern Image: </label>
+              <input
+                type="text"
+                alt="pattern image"
+                name="image"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.image}
+                className="pattern-input"
+              />{" "}
+              <br></br>
+              {formik.errors.image && formik.touched.image && (
+                <div className="edit-error">{formik.errors.image}</div>
+              )}
+
+              {/* <label>Pattern File URL</label>
+              <input
+                type="file"
+                name="pattern_file"
+                onChange={(e) => {
+                  formik.setFieldValue("pattern_file", e.target.files[0]);
+                }}
+                ref={fileInputRef}
+                style={{ display: "none" }}
+              />
+              <button
+                type="button"
+                className="button-55-1"
+                onClick={() => fileInputRef.current.click()} 
+              >
+                Choose File
+              </button>
+              {formik.values.pattern_file && (
+                <div>{formik.values.pattern_file.name}</div>
+              )} */}
               <button
                 className="button-55-1"
                 type="submit"

@@ -15,6 +15,7 @@ export const CartProvider = ({ children }) => {
         setCartItems(cartItems.filter((item) => item.id !== patternId));
     };
 
+
     
     return (
         <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, stripeLoaded }}>

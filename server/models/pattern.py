@@ -3,7 +3,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 from config import flask_bcrypt, db
-from sqlalchemy import event
+from sqlalchemy import event, LargeBinary
 import stripe
 import os
 
@@ -13,6 +13,7 @@ class Pattern(db.Model, SerializerMixin):
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(50), nullable=False)
   description = db.Column(db.String(250), nullable=False)
+  pattern_file = db.Column(db.String(255))
   price = db.Column(db.Float)
   is_free = db.Column(db.Boolean, default=False)
   author = db.Column(db.String)

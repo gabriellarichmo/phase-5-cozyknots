@@ -12,21 +12,21 @@ function Home({patterns}) {
     const [sortOrder, setSortOrder] = useState("asc");
 //   const { updateCurrentUser } = useOutletContext();
 
-    // useEffect(() => {
-    //     fetch("/categories")
-    //         .then((response) => {
-    //             if (!response.ok) {
-    //                 throw new Error("Network response was not ok");
-    //             }
-    //         return response.json();
-    //         })
-    //         .then((categories) => {
-    //             setCategories(categories);
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error fetching categories:", error);
-    //         });
-    // }, []);
+    useEffect(() => {
+        fetch("/categories")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+            return response.json();
+            })
+            .then((categories) => {
+                setCategories(categories);
+            })
+            .catch((error) => {
+                console.error("Error fetching categories:", error);
+            });
+    }, []);
 
 
     const getCategoryName = (categoryId) => {
@@ -38,6 +38,7 @@ function Home({patterns}) {
     const filterPatterns = () => {
         return patterns.filter((pattern) => {
         const categoryName = getCategoryName(pattern.category_id);
+        console.log("Pattern:", pattern.title, "Category:", categoryName);
         if (
             (selectedCategory === "all" ||
             categoryName === selectedCategory) &&
@@ -89,20 +90,21 @@ function Home({patterns}) {
             <h1 className="title">Cozy Knots Co.</h1>
             {/* Type filter */}
             <select onChange={(e) => handleTypeChange(e.target.value)}>
-                <option value="all">All Types</option>
-                <option value="knit">Knit</option>
-                <option value="crochet">Crochet</option>
+                <option value="All">All Types</option>
+                <option value="Knit">Knit</option>
+                <option value="Crochet">Crochet</option>
             </select>
 
             {/* Category filter */}
             <select onChange={(e) => handleCategoryChange(e.target.value)}>
-                <option value="all">All Categories</option>
-                <option value="scarf">Scarves</option>
-                <option value="sweater">Sweaters</option>
-                <option value="hat">Hats</option>
-                <option value="mittens">Mittens</option>
-                <option value="socks">Socks</option>
-                <option value="amigurumi">Amigurumi</option>
+                <option value="All">All Categories</option>
+                <option value="Scarves">Scarves</option>
+                <option value="Sweaters">Sweaters</option>
+                <option value="Hats">Hats</option>
+                <option value="Mittens">Mittens</option>
+                <option value="Socks">Socks</option>
+                <option value="Amigurumi">Amigurumi</option>
+                <option value="Other">Other</option>
             </select>
 
             {/* Difficulty filter */}

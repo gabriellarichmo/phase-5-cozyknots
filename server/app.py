@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-# Standard library imports
-
-# Remote library imports
 from flask import request, g, session, send_file, abort, jsonify, redirect
 from flask_restful import Resource
 from functools import wraps
@@ -50,9 +47,6 @@ def login_required(func):
         return func(*args, **kwargs)
     return decorated_function
 
-
-
-
 # #! ALL REGISTRATION RELATED ROUTES
 @app.route("/signup", methods=["POST"])
 def signup():
@@ -65,7 +59,6 @@ def signup():
         return user_schema.dump(user), 201
     except Exception as e:
         db.session.rollback()
-        # logging.error(f"Error during signup: {e}")
         return {"error": str(e)}, 422
     
 @app.route("/login", methods=["POST"])
@@ -104,6 +97,7 @@ def current_user():
 
 # #! ALL PATTERN RELATED ROUTES
 class Patterns(Resource):
+    # @login_required
     def get(self):
         try:
             serialized_pattern = patterns_schema.dump(Pattern.query)
@@ -114,10 +108,9 @@ class Patterns(Resource):
     def post(self):
         try:
             data = request.json
+            # file = request.files['pattern_file']
             category_id = data.get('category_id') 
             category = Category.query.filter_by(id=category_id).first()
-            print(data)
-            print(category)
             if not category:
                 return {'error': 'Category not found'}, 404
             
@@ -139,17 +132,19 @@ class Patterns(Resource):
                 difficulty=data['difficulty'],
                 type=data['type'],
                 category=category,
-                is_free=is_free
+                is_free=is_free,
+                image=data['image']
             )
+            # pattern.pattern_file = file.name
             db.session.add(pattern)
             db.session.commit()
             return pattern_schema.dump(pattern), 201
         except Exception as e:
-            print(e)
             db.session.rollback()
             return {"error": str(e)}, 422
         
 class PatternById(Resource):
+    # @login_required
     def get(self, id):
         try:
             pattern = Pattern.query.get(id)
@@ -192,21 +187,9 @@ def get_image(image_path):
     print(full_path)
     return send_file(full_path, mimetype='image/jpeg') 
             
-    #! could be problematic - hide pattern from profile instead of deleting from all users that purchased/downloaded
-    # def delete(self, id):
-    #     if g.pattern:
-    #         try:
-    #             db.session.delete(g.pattern)
-    #             db.session.commit()
-    #             return {}, 204
-    #         except Exception as e:
-    #             db.session.rollback()
-    #             return {"error": str(e)}, 400
-    #     else:
-    #         return {"error": f"Unable to delete pattern {id} at this time."}, 404
-
 # #! ALL USER RELATED ROUTES
 class Users(Resource):
+    @login_required
     def get(self):
         try:
             serialized_user = users_schema.dump(User.query)
@@ -226,6 +209,7 @@ class Users(Resource):
             return {"error": str(e)}, 422
 
 class UserById(Resource):
+    @login_required
     def get(self, id):
         try:
             if g.user:
@@ -254,6 +238,14 @@ class UserById(Resource):
         
 #! FAVORITES
 class Favorites(Resource):
+    def get(self, user_id):
+        try:
+            favorited_patterns = Favorite.query.filter_by(user_id=user_id).all()
+            serialized_patterns = [pattern.to_dict() for pattern in favorited_patterns]
+            return jsonify({"favoritedPatterns": serialized_patterns}), 200
+        except Exception as e:
+            return {"error": str(e)}, 500
+    
     def post(self, pattern_id):
         try:
             user_id = session["user_id"]
@@ -290,6 +282,7 @@ def get_favorited_patterns(user_id):
         
 # #! ALL PURCHASE RELATED ROUTES
 class Purchases(Resource):
+    @login_required
     def get(self):
         try:
             if "user_id" not in session:
@@ -358,7 +351,7 @@ def create_checkout_session(id):
                 "status": "Pending",
             }
             new_purchase = Purchase(**new_purchase_data)
-            
+
             db.session.add(new_purchase)
             db.session.commit()
             checkout_session = stripe.checkout.Session.create(

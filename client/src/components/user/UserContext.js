@@ -22,38 +22,14 @@ export const UserProvider = ({ children }) => {
       } catch (error) {
         console.error("Error fetching current user:", error);
         toast.error("Please log in");
-        // if (!currentUser) {
-          // navigate("/registration");
-        // }
+        if (!currentUser) {
+          navigate("/registration");
+        }
       }
     };
 
     fetchCurrentUser();
   }, [navigate]);
-
-  // const handleEditUser = async (formData) => {
-  //   try {
-  //     const response = await fetch(`/users/${currentUser.id}`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(formData),
-  //     });
-  //     if (response.ok) {
-  //       const updatedUser = await response.json();
-  //       console.log(currentUser)
-  //       setCurrentUser(updatedUser);
-  //       toast.success("Profile updated successfully");
-  //     } else {
-  //       const errorObj = await response.json();
-  //       toast.error(errorObj.message);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error("Failed to update profile");
-  //   }
-  // };
 
   const handleLogout = async () => {
     try {

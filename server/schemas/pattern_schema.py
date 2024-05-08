@@ -4,10 +4,10 @@ from models.pattern import Pattern
 
 class PatternSchema(ma.SQLAlchemyAutoSchema):
     category = fields.Nested('CategorySchema', exclude=('patterns',))
+    pattern_file = fields.String()
     class Meta:
         model = Pattern
         load_instance = True
-        # exclude = ["created_at", "updated_at"]
     
     is_free = fields.Boolean(required=True)
     download_link = fields.String()
@@ -17,6 +17,7 @@ class PatternSchema(ma.SQLAlchemyAutoSchema):
     price = fields.Float(required=True, validate=validate.Range(min=1, max=10, error="Price must be between 1 and 10."))
     difficulty = fields.String(required=True, validate=validate.OneOf(["Beginner", "Intermediate", "Advanced"], error="Difficulty must be one of: Beginner, Intermediate, Advanced."))
     category_id = fields.Integer(required=True)
+    image = fields.String()
 
 pattern_schema = PatternSchema()
 patterns_schema = PatternSchema(many=True)

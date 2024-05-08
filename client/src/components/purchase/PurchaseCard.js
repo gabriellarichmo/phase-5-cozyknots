@@ -5,7 +5,7 @@ const PurchaseCard = () => {
     const [purchaseHistory, setPurchaseHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const {purchaseId} = useParams()
-    console.log(purchaseId)
+
     // debugger
     useEffect(() => {
         fetchPurchaseHistory();
@@ -22,6 +22,7 @@ const PurchaseCard = () => {
             setLoading(false);
         }
     };
+
     
     //figure out why use effect not kicking in
 
