@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
-
+//useParams to extract pattern id and useEffect to fetch pattern by id and set into state
 
 const PatternDetail = ({ pattern }) => {
     const { addToCart } = useContext(CartContext);

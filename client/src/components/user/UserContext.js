@@ -43,15 +43,18 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const handleDeleteUser = async () => {
-    try {
-      await fetch(`/users/${currentUser.id}`, { method: "DELETE" });
-      handleLogout();
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      toast.error("Failed to delete user");
-    }
+//fix
+  const handleDeleteUser = () => {
+    fetch(`/users/${currentUser.id}`, { method: "DELETE" })
+      .then(handleLogout);
   };
+  // const handleDeleteUser = () => {
+  //   fetch(`/users/${currentUser.id}`, { method: "DELETE" });
+  // } catch (error) {
+  //     console.error("Error deleting user:", error);
+  //     toast.error("Failed to delete user");
+  //   }
+  // };
 
   return (
       <UserContext.Provider value={{ currentUser, setCurrentUser, handleLogout, handleDeleteUser }}>

@@ -39,10 +39,10 @@ export const router = createBrowserRouter([
         path: "/community",
         element: <Community />,
       },
-      // {
-      //   path: "/patterns/:patternId",
-      //   element: <PatternCard />
-      // },
+      {
+        path: "/patterns/:patternId",
+        element: <PatternCard />
+      },
       {
         path: "/patterns",
         element: <NewPatternForm />,
@@ -54,15 +54,9 @@ export const router = createBrowserRouter([
       {
         path: "/cart",
         element: <MyCart />,
-        // children: [
-        // {
-        //   path: "/success",
-        //   element: <PurchaseCard />,
-        // },
-        // ],
       },
       {
-        path: "/success/:purchaseId",
+        path: "success/:purchaseId",
         element: <PurchaseCard />,
       },
     ],

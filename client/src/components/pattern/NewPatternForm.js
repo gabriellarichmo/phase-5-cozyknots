@@ -10,7 +10,7 @@ const NewPatternForm = () => {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
-  const fileInputRef = useRef(null);
+  // const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetch("/categories")

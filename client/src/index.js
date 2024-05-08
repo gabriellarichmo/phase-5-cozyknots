@@ -5,12 +5,10 @@ import { UserProvider } from "./components/user/UserContext";
 import App from "./components/App";
 
 ReactDOM.render(
-  <React.StrictMode>
     <Router>
       <UserProvider>
         <App />
       </UserProvider>
-    </Router>
-  </React.StrictMode>,
+    </Router>,
   document.getElementById("root")
 );

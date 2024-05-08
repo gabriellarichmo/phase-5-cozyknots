@@ -68,7 +68,8 @@ def login():
         user = User.query.filter_by(username=data["username"]).first()
         if user and user.authenticate(data.get("password_hash")):
             session["user_id"] = user.id
-            return user.to_dict(), 200
+            import ipdb; ipdb.set_trace()
+            return user_schema.dump(user), 200
         else:
             return {"message": "Invalid credentials"}, 422
     except Exception as e:
@@ -210,27 +211,33 @@ class Users(Resource):
 
 class UserById(Resource):
     @login_required
-    def get(self, id):
+    # def get(self, id):
+    #     try:
+    #         if g.user:
+    #             return user_schema.dump(g.user), 200
+    #     except Exception as e:
+    #         return {"error": str(e)}, 400
+    
+    @login_required
+    def patch(self, id):
         try:
-            if g.user:
-                return user_schema.dump(g.user), 200
+            user = db.session.get(User, session["user_id"])
+            if user:
+                data = request.json
+                updated_user = user_schema.load(data, instance=user, partial=True)
+                db.session.commit()
+                return user_schema.dump(updated_user), 200
+            else:
+                return {"error": "User not found"}, 404
         except Exception as e:
             return {"error": str(e)}, 400
     
-    def patch(self, id):
-        try:
-            if g.user:
-                data = request.json
-                updated_user = user_schema.load(data, instance=g.user, partial=True)
-                db.session.commit()
-                return user_schema.dump(updated_user), 200
-        except Exception as e:
-            return {"error": str(e)}, 400
-            
+    @login_required        
     def delete(self, id):
         try:
-            if g.user:
-                db.session.delete(g.user)
+            user = db.session.get(User, session["user_id"])
+            if user:
+                db.session.delete(user)
                 db.session.commit()
                 return {}, 204
         except Exception as e:

@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 const EditProfile = () => {
   const { currentUser, setCurrentUser, handleDeleteUser } = useContext(UserContext);
   const [editForm, setEditForm] = useState(false);
-  const [updatedUser, setUpdatedUser] = useState(false);
+  // const [updatedUser, setUpdatedUser] = useState(false);
   const navigate = useNavigate();
   
   const editProfileSchema = object({
@@ -51,9 +51,9 @@ const EditProfile = () => {
       if (resp.ok) {
         resp
           .json()
-          .then((user) => {
+          .then((updatedUser) => {
             setCurrentUser(updatedUser);
-            navigate(`/users/${currentUser.id}`)
+            toggleForm();
             toast.success("Profile updated successfully");
           })
       } else {
@@ -84,7 +84,6 @@ const EditProfile = () => {
     backgroundColor: "red",
   };
 
-// handleEditUser is in UserContext and passed through here. Figure out how to invoke that and use it for the form.
 
 
   return (

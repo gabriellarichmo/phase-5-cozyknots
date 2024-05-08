@@ -5,6 +5,7 @@ import NewPatternForm from "../pattern/NewPatternForm";
 import EditProfile from "./EditProfile";
 import PurchaseCard from "../purchase/PurchaseCard";
 import PatternCard from "../pattern/PatternCard";
+import PurchaseCardTwo from "../purchase/PurchaseCardTwo";
 
 const UserCard = () => {
   const { currentUser } = useContext(UserContext);
@@ -58,7 +59,7 @@ const UserCard = () => {
         </div>
         <EditProfile {...currentUser} />
         <NewPatternForm />
-        <PurchaseCard />
+        {currentUser?.purchases.map(p => <PurchaseCardTwo {...p} key={p.id} />)}
         {favoritedPatterns.length > 0 && (
           <div className="favorited-patterns">
             <h3>Favorited Patterns:</h3>

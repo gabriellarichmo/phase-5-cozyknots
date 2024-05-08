@@ -90,7 +90,7 @@ const Registration = () => {
               });
             });
         } else {
-          return resp.json().then((errorObj) => toast.error(errorObj.message));
+          return resp.json().then((errorObj) => toast.error(errorObj.message || errorObj.error));
         }
       })
       .catch((error) => {

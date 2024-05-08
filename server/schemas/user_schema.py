@@ -4,6 +4,7 @@ from models.user import User
 from marshmallow import validate, validates, ValidationError, fields, validate, validates_schema
 import logging
 from sqlalchemy import func
+from flask import session
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     
@@ -22,7 +23,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         "PurchaseSchema",
         many=True,
         exclude=("user",),
-        only=("id",),
+        only=("id", "price", "status", "purchase_date", "pattern_id"),
     )
     
     username = fields.String(required=True, validate=validate.Length(min=2, max=20), 
@@ -44,8 +45,9 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     def validate_email(self, data, **kwargs):
         email = data.get("email")
         existing_user = User.query.filter(func.lower(User.email) == func.lower(email)).first()
-        if existing_user:
+        if existing_user and existing_user.id != session.get("user_id"):
             raise ValidationError("Inputted email already exists.")
+        
     
     def load(self, data, instance=None, *, partial=False, **kwargs):
         loaded_instance = super().load(
