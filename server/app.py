@@ -68,7 +68,6 @@ def login():
         user = User.query.filter_by(username=data["username"]).first()
         if user and user.authenticate(data.get("password_hash")):
             session["user_id"] = user.id
-            import ipdb; ipdb.set_trace()
             return user_schema.dump(user), 200
         else:
             return {"message": "Invalid credentials"}, 422
