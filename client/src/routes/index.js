@@ -12,7 +12,7 @@ import EditProfile from "../components/user/EditProfile";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    // path: "/",
     element: <App />,
     errorElement: <Error />,
     children: [
@@ -26,14 +26,8 @@ export const router = createBrowserRouter([
         element: <Registration />,
       },
       {
-        path: "/users/:userId",
+        path: "/user/:userId",
         element: <UserCard />,
-        children: [
-          {
-            path: "/edit",
-            element: <EditProfile />,
-          },
-        ],
       },
       {
         path: "/community",
@@ -47,10 +41,6 @@ export const router = createBrowserRouter([
         path: "/patterns",
         element: <NewPatternForm />,
       },
-      // {
-      //   path: "/purchases/:purchaseId",
-      //   element: <PurchaseCard />,
-      // },
       {
         path: "/cart",
         element: <MyCart />,
@@ -62,3 +52,14 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
+
+@app.route("/registration")
+@app.route("/user/:<int:id>")
+@app.route("/")
+@app.route("/cart")
+@app.route("/success/:<int:id>")
+@app.route("/community")
+
+
+def index(id=0):
+    return render_template("index.html")

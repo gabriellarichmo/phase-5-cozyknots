@@ -10,9 +10,15 @@ from flask_session import Session
 from os import environ
 import os
 import stripe
+from dotenv import load_dotenv
 
 # Instantiate app, set attributes
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/build',
+    template_folder='../client/build'
+)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///cozyknots.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.json.compact = False
@@ -21,6 +27,8 @@ app.config["SESSION_TYPE"] = "sqlalchemy"
 
 # app.config["STRIPE_PUBLISHABLE_KEY"]=os.environ.get("STRIPE_PUBLISHABLE_KEY")
 # app.config["STRIPE_SECRET_KEY"]=os.environ.get("STRIPE_SECRET_KEY")
+load_dotenv()
+app.config["SQLALCHEMY_DATABASE_URL"] = os.environ.get("DATABASE_URL")
 
 stripe_keys = {
     "secret_key": os.environ["STRIPE_SECRET_KEY"],

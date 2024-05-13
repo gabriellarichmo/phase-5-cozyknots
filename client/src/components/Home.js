@@ -86,38 +86,47 @@ function Home({patterns}) {
     console.log(sortedPatterns)
 
     return (
-        <div>
+        <div className="filter-container">
             <h1 className="title">Cozy Knots Co.</h1>
             {/* Type filter */}
-            <select onChange={(e) => handleTypeChange(e.target.value)}>
-                <option value="All">All Types</option>
-                <option value="Knit">Knit</option>
-                <option value="Crochet">Crochet</option>
+            <select
+            className="filter-select"
+            onChange={(e) => handleTypeChange(e.target.value)}
+            >
+            <option value="All">All Types</option>
+            <option value="Knit">Knit</option>
+            <option value="Crochet">Crochet</option>
             </select>
 
             {/* Category filter */}
-            <select onChange={(e) => handleCategoryChange(e.target.value)}>
-                <option value="All">All Categories</option>
-                <option value="Scarves">Scarves</option>
-                <option value="Sweaters">Sweaters</option>
-                <option value="Hats">Hats</option>
-                <option value="Mittens">Mittens</option>
-                <option value="Socks">Socks</option>
-                <option value="Amigurumi">Amigurumi</option>
-                <option value="Other">Other</option>
+            <select
+            className="filter-select"
+            onChange={(e) => handleCategoryChange(e.target.value)}
+            >
+            <option value="All">All Categories</option>
+            <option value="Scarves">Scarves</option>
+            <option value="Sweaters">Sweaters</option>
+            <option value="Hats">Hats</option>
+            <option value="Mittens">Mittens</option>
+            <option value="Socks">Socks</option>
+            <option value="Amigurumi">Amigurumi</option>
+            <option value="Other">Other</option>
             </select>
 
             {/* Difficulty filter */}
-            <select onChange={(e) => handleDifficultyChange(e.target.value)}>
-                <option value="all">All Difficulties</option>
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
+            <select
+            className="filter-select"
+            onChange={(e) => handleDifficultyChange(e.target.value)}
+            >
+            <option value="all">All Difficulties</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
             </select>
 
             {/* Sort order */}
-            <button onClick={handleSortChange}>
-                {sortOrder === "asc" ? "Sort A-Z" : "Sort Z-A"}
+            <button className="sort-button" onClick={handleSortChange}>
+            {sortOrder === "asc" ? "Sort A-Z" : "Sort Z-A"}
             </button>
 
             {/* Display patterns */}

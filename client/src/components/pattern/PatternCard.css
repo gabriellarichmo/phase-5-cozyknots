@@ -1,3 +1,9 @@
+/* .pattern-container {
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+} */
+
 .pattern-card {
   background-image: linear-gradient(to bottom right, snow, lightgrey);
   border-radius: 8px;
@@ -18,7 +24,7 @@
 
 .pattern-card img {
   max-width: 400px;
-  max-height: 200px;
+  max-height: 400px;
   object-fit: cover;
   border-radius: 4px;
 }
@@ -51,3 +57,55 @@
 .pattern-card button:hover {
   background-color: #8faab3;
 }
+/* 
+.pattern-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px;
+  padding: 10px;
+}
+
+.pattern-card {
+  background-image: linear-gradient(to bottom right, snow, lightgrey);
+  border-radius: 8px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+.pattern-card img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.pattern-card h3 {
+  font-size: 1.25rem;
+  margin: 0.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.pattern-card p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #666;
+  margin: 0 0.5rem 0.5rem;
+}
+
+.pattern-card button {
+  background-color: #dbcccc;
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pattern-card button:hover {
+  background-color: #8faab3;
+} */

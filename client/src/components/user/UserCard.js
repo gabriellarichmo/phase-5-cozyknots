@@ -59,11 +59,11 @@ const UserCard = () => {
         </div>
         <EditProfile {...currentUser} />
         <NewPatternForm />
-        {currentUser?.purchases.map(p => <PurchaseCardTwo {...p} key={p.id} />)}
+        {currentUser?.purchases?.map(p => <PurchaseCardTwo {...p} key={p.id} />)}
         {favoritedPatterns.length > 0 && (
           <div className="favorited-patterns">
             <h3>Favorited Patterns:</h3>
-            {favoritedPatterns.map((pattern) => (
+            {favoritedPatterns?.map((pattern) => (
               <PatternCard key={pattern.id} {...pattern} />
             ))}
           </div>
