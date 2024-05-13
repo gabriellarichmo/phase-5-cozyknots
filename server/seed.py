@@ -142,30 +142,49 @@ if __name__ == '__main__':
             type="Crochet",
             category_id=Category.query.filter_by(name="Other").first().id
         )
-        patterns = [p1, p2, p3, p4]
+        p5 = Pattern(
+            title="Cat in the Hat",
+            description="Humans aren't the only ones who can make a fashion statement!",
+            price=0.99,
+            author=fake.name(),
+            image="cat_hat.JPEG",
+            difficulty="Beginner",
+            type="Crochet",
+            category_id=Category.query.filter_by(name="Hats").first().id
+        )
+        p6 = Pattern(
+            title="Checkered Beanie",
+            description="Keep your head warm with this fun beanie pattern!",
+            price=0.99,
+            author=fake.name(),
+            image="checker_beanie.JPEG",
+            difficulty="Intermediate",
+            type="Crochet",
+            category_id=Category.query.filter_by(name="Hats").first().id
+        )
+        # p7 = Pattern(
+        #     title="Belt Bag",
+        #     description="The 80's called! This belt bag is a take on the modern fappy pack - often worn crossbody.",
+        #     price=1.75,
+        #     author=fake.name(),
+        #     image="crossbody.JPEG",
+        #     difficulty="Beginner",
+        #     type="Crochet",
+        #     category_id=Category.query.filter_by(name="Other").first().id
+        # )
+        p7 = Pattern(
+            title="Mushroom Bag",
+            description="Whether you need a sack for foraging your mushrooms or just want to please your inner hobbit, this versitile mushroom shaped bag is a fun project to try when bridging the gap between beginner and intermediate crochet!",
+            price=2.25,
+            author=fake.name(),
+            image="mush_bag.JPEG",
+            difficulty="Intermediate",
+            type="Crochet",
+            category_id=Category.query.filter_by(name="Other").first().id
+        )
+        patterns = [p1, p2, p3, p4, p5, p6, p7]
         db.session.add_all(patterns)
         db.session.commit()
-
-
-        # for _ in range(10):
-        #     title = fake.text(max_nb_chars=50)
-        #     description = fake.text(max_nb_chars=250)
-        #     price = round(random.uniform(0, 10), 2)
-        #     author = fake.name()
-        #     difficulty = fake.random_element(elements=("Beginner", "Intermediate", "Advanced"))
-        #     category = random.choice(categories)
-        #     pattern = Pattern(
-        #         title=title,
-        #         description=description,
-        #         price=price,
-        #         author=author,
-        #         difficulty=difficulty,
-        #         category_id=category.id
-        #     )
-        #     print(f"Adding pattern: {title}, {description}")
-        #     db.session.add(pattern) 
-            
-        # db.session.commit()
             
     print("Finished seeding...")
             # Seed code goes here!

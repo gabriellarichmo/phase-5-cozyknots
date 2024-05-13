@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import request, g, session, send_file, abort, jsonify, redirect
+from flask import request, g, session, send_file, abort, jsonify, redirect, render_template
 from flask_restful import Resource
 from functools import wraps
 from werkzeug.security import generate_password_hash
@@ -22,9 +22,9 @@ from schemas.category_schema import category_schema, categories_schema
 
 # Views go here!
 
-@app.route('/')
-def index():
-    return '<h1>Project Server</h1>'
+# @app.route('/')
+# def index(id=0):
+#     return render_template('index.html')
 
 @app.before_request
 def before_request():
@@ -343,7 +343,10 @@ class Categories(Resource):
             return {"error": str(e)}, 400
 
 YOUR_DOMAIN = "http://localhost:3000"
-stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
+stripe_secret_key = os.environ.get("STRIPE_SECRET_KEY")
+if not stripe_secret_key:
+    raise ValueError("STRIPE_SECRET_KEY is not set in the environment variables.")
+stripe.api_key = stripe_secret_key
 
 @app.route('/create-checkout-session/<int:id>', methods=['POST'])
 def create_checkout_session(id):
@@ -378,7 +381,7 @@ def create_checkout_session(id):
     except Exception as e:
         return {"message": str(e)}
 
-
+#BACKEND ROUTES
 api.add_resource(Categories, "/categories")
 api.add_resource(Patterns, "/patterns")
 api.add_resource(PatternById, "/patterns/<int:id>")
@@ -390,4 +393,13 @@ api.add_resource(Favorites, "/favorites/<int:pattern_id>")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
+#FRONTEND
+@app.route("/registration")
+@app.route("/user/:<int:id>")
+@app.route("/")
+@app.route("/cart")
+@app.route("/success/:<int:id>")
+@app.route("/community")
 
+def index(id=0):
+    return render_template("index.html")

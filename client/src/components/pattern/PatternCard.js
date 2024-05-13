@@ -54,25 +54,27 @@ const PatternCard = ({ id, title, author, description, difficulty, price, catego
     }
 
     return (
-        <div className="pattern-card">
+        <div className="pattern-container">
+            <div className="pattern-card">
             {/* <Link to={`/patterns/${id}`} > */}
             <h3>{title}</h3>
-            {favorited ? (
-                <button onClick={handleFavorite}>Unfavorite ❤️</button>
-            ) : (
-                <button onClick={handleFavorite}>Favorite 🤍</button>
-            )}
             {imageLoaded && imageUrl && <img src={imageUrl} alt={title} />}
             <p>Author: {author}</p>
             <p>{description}</p>
             <p>{category.name}</p>
             <p>Difficulty: {difficulty}</p>
             <p>${price}</p>
+            {favorited ? (
+                <button onClick={handleFavorite}>Unfavorite ❤️</button>
+            ) : (
+                <button onClick={handleFavorite}>Favorite 🤍</button>
+            )}
             {inCart ? (
                 <button onClick={handleRemoveFromCart}>Remove from Cart 🛒</button>
             ) : (
                 <button onClick={handleAddToCart}>Add to Cart🛒</button>
             )}
+            </div>
         </div>
     );
 };
