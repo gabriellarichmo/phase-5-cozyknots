@@ -17,7 +17,8 @@ from flask_marshmallow import Marshmallow
 from flask_bcrypt import Bcrypt
 from flask_session import Session
 from os import environ
-import re
+import os
+import stripe
 # Models
 from models.user import User
 from models.pattern import Pattern
@@ -90,49 +91,16 @@ def login_required(func):
 # #! ALL REGISTRATION RELATED ROUTES
 @app.route("/signup", methods=["POST"])
 def signup():
-    data = request.get_json()
-
-    # Validate required fields
-    if not data.get('username') or not data.get('email') or not data.get('password'):
-        return jsonify({"error": "Username, email, and password are required"}), 422
-
-    # Validate email format
-    email_regex = r'^\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-    if not re.match(email_regex, data.get('email')):
-        return jsonify({"error": "Invalid email format"}), 422
-
-    # Validate password strength (example: at least 6 characters)
-    if len(data.get('password')) < 6:
-        return jsonify({"error": "Password must be at least 6 characters long"}), 422
-
-    # Check if user already exists
-    existing_user = User.query.filter_by(email=data.get('email')).first()
-    if existing_user:
-        return jsonify({"error": "User with this email already exists"}), 422
-
-    # Create new user
-    new_user = User(
-        username=data.get('username'),
-        email=data.get('email'),
-        password_hash=generate_password_hash(data.get('password'))
-    )
-    db.session.add(new_user)
-    db.session.commit()
-
-    return jsonify({"message": "User created successfully"}), 201
-
-
-# def signup():
-#     try:
-#         data = request.json
-#         user = user_schema.load(data, partial=True)
-#         db.session.add(user)
-#         db.session.commit()
-#         session["user_id"] = user.id
-#         return user_schema.dump(user), 201
-#     except Exception as e:
-#         db.session.rollback()
-#         return {"error": str(e)}, 422
+    try:
+        data = request.json
+        user = user_schema.load(data, partial=True)
+        db.session.add(user)
+        db.session.commit()
+        session["user_id"] = user.id
+        return user_schema.dump(user), 201
+    except Exception as e:
+        db.session.rollback()
+        return {"error": str(e)}, 422
     
 @app.route("/login", methods=["POST"])
 def login():
@@ -166,7 +134,7 @@ def current_user():
         else:
             return {"message": "Please log in"}, 400
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": str(e)}, 500
 
 # #! ALL PATTERN RELATED ROUTES
 class Patterns(Resource):

@@ -3,6 +3,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 from config import flask_bcrypt, db
+from werkzeug.security import check_password_hash
 
 class User(db.Model, SerializerMixin):
   __tablename__ = "users"
@@ -39,6 +40,14 @@ class User(db.Model, SerializerMixin):
       raise ValueError("Usermane must be at least one character and less than 20 characters.")
     else:
       return username
+    
+  @validates("email")
+  def validate_email(self, _, email):
+      if not isinstance(email, str):
+          raise TypeError("Email must be a string.")
+      if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+          raise ValueError("Invalid email address.")
+      return email
   
   @hybrid_property
   def password_hash(self):
