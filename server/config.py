@@ -37,11 +37,7 @@ stripe_keys = {
 
 stripe.api_key = stripe_keys["secret_key"]
 
-# Define metadata, instantiate db
-# metadata = MetaData(naming_convention={
-#     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-# })
-# db = SQLAlchemy(metadata=metadata)
+
 db = SQLAlchemy(app)
 app.config["SESSION_SQLALCHEMY"] = db
 
@@ -50,6 +46,3 @@ api = Api(app)
 ma = Marshmallow(app)
 session = Session(app)
 flask_bcrypt = Bcrypt(app)
-
-# Instantiate CORS
-# CORS(app)
