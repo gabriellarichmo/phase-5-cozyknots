@@ -6,34 +6,40 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch("/current_user");
-        if (response.ok) {
+        const response = await fetch(
+          "https://cozyknots.onrender.com/current_user", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json"
+            },
+          });
+          if (!response.ok) {
+            throw new Error(
+              `Error: ${response.status} ${response.statusText}`
+            );
+          }          
           const user = await response.json();
           setCurrentUser(user);
-          console.log(currentUser)
-        } else {
-          throw new Error("Unable to fetch current user.");
+        } catch (error) {
+          console.error("Unable to fetch current user.", error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error("Error fetching current user:", error);
-        toast.error("Please log in");
-        if (!currentUser) {
-          navigate("/registration");
-        }
-      }
-    };
-
+      };
     fetchCurrentUser();
-  }, [navigate]);
+  }, []);
 
   const handleLogout = async () => {
     try {
-      await fetch("/logout", { method: "DELETE" });
+      await fetch("https://cozyknots.onrender.com/logout", {
+        method: "DELETE",
+      });
       setCurrentUser(null);
       toast("Come back soon!", { icon: "👋" });
       navigate("/");
@@ -45,8 +51,9 @@ export const UserProvider = ({ children }) => {
 
 //fix
   const handleDeleteUser = () => {
-    fetch(`/users/${currentUser.id}`, { method: "DELETE" })
-      .then(handleLogout);
+    fetch(`https://cozyknots.onrender.com/users/${currentUser.id}`, {
+      method: "DELETE",
+    }).then(handleLogout);
   };
   // const handleDeleteUser = () => {
   //   fetch(`/users/${currentUser.id}`, { method: "DELETE" });
@@ -57,7 +64,7 @@ export const UserProvider = ({ children }) => {
   // };
 
   return (
-      <UserContext.Provider value={{ currentUser, setCurrentUser, handleLogout, handleDeleteUser }}>
+      <UserContext.Provider value={{ loading, currentUser, setCurrentUser, handleLogout, handleDeleteUser }}>
           {children}
       </UserContext.Provider>
   );

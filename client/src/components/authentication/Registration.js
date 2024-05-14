@@ -12,7 +12,7 @@ const signupSchema = object({
     .required("Username is required"),
   email: string().email().required("Email is required"),
   password: string()
-    .min(5, "Password must be at least 5 characters long")
+    .min(8, "Password must be at least 8 characters long")
     .matches(
       /[a-zA-Z0-9]/,
       "Passwords can only contain latin numbers and letters"
@@ -25,7 +25,7 @@ const signinSchema = object({
     .max(20, "Username must be max of 20 characters")
     .required("Username is required"),
   password: string()
-    .min(5, "Password must be at least 5 characters long")
+    .min(8, "Password must be at least 8 characters long")
     .matches(
       /[a-zA-Z0-9]/,
       "Passwords can only contain latin numbers and letters"
@@ -60,7 +60,7 @@ const Registration = () => {
     };
 
     checkAuthentication();
-  }, []);
+  }, [navigate, setCurrentUser]);
 
   const formik = useFormik({
     initialValues,
