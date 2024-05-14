@@ -33,33 +33,33 @@ from schemas.category_schema import category_schema, categories_schema
 
 from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
-app = Flask(
-    __name__,
-    static_url_path='',
-    static_folder='../client/build',
-    template_folder='../client/build'
-)
+# app = Flask(
+#     __name__,
+#     static_url_path='',
+#     static_folder='../client/build',
+#     template_folder='../client/build'
+# )
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///cozyknots.db")
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///cozyknots.db")
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.secret_key = os.environ.get("SESSION_SECRET", "default_secret_key")
-app.config["SESSION_TYPE"] = "sqlalchemy"
+# app.secret_key = os.environ.get("SESSION_SECRET", "default_secret_key")
+# app.config["SESSION_TYPE"] = "sqlalchemy"
 
-stripe_keys = {
-    "secret_key": os.environ.get("STRIPE_SECRET_KEY"),
-    "publishable_key": os.environ.get("STRIPE_PUBLISHABLE_KEY"),
-}
+# stripe_keys = {
+#     "secret_key": os.environ.get("STRIPE_SECRET_KEY"),
+#     "publishable_key": os.environ.get("STRIPE_PUBLISHABLE_KEY"),
+# }
 
-db = SQLAlchemy(app)
-app.config["SESSION_SQLALCHEMY"] = db
-migrate = Migrate(app, db)
-api = Api(app)
-ma = Marshmallow(app)
-session = Session(app)
-flask_bcrypt = Bcrypt(app)
+# db = SQLAlchemy(app)
+# app.config["SESSION_SQLALCHEMY"] = db
+# migrate = Migrate(app, db)
+# api = Api(app)
+# ma = Marshmallow(app)
+# session = Session(app)
+# flask_bcrypt = Bcrypt(app)
 
 # Views go here!
 
