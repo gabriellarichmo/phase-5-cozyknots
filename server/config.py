@@ -13,6 +13,7 @@ import stripe
 from dotenv import load_dotenv
 
 # Instantiate app, set attributes
+load_dotenv()
 app = Flask(
     __name__,
     static_url_path='',
@@ -21,13 +22,10 @@ app = Flask(
 )
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///cozyknots.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.json.compact = False
+
 app.secret_key = environ.get("SESSION_SECRET")
 app.config["SESSION_TYPE"] = "sqlalchemy"
 
-# app.config["STRIPE_PUBLISHABLE_KEY"]=os.environ.get("STRIPE_PUBLISHABLE_KEY")
-# app.config["STRIPE_SECRET_KEY"]=os.environ.get("STRIPE_SECRET_KEY")
-load_dotenv()
 app.config["SQLALCHEMY_DATABASE_URL"] = os.environ.get("DATABASE_URL")
 
 stripe_keys = {
