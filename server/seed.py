@@ -36,10 +36,10 @@ def seed_cat():
 if __name__ == '__main__':
     fake = Faker()
     with app.app_context():
-        # Purchase.query.delete()
-        # User.query.delete()
-        # Category.query.delete()
-        # Pattern.query.delete()
+        Purchase.query.delete()
+        User.query.delete()
+        Category.query.delete()
+        Pattern.query.delete()
 
         seed_cat()
         categories = Category.query.all()

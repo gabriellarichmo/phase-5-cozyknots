@@ -4,6 +4,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 from config import flask_bcrypt, db
 from werkzeug.security import check_password_hash
+import re
 
 class User(db.Model, SerializerMixin):
   __tablename__ = "users"

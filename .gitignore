@@ -27,6 +27,7 @@ pids
 !/storage/.keep
 .byebug_history
 
+./server/.env
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 

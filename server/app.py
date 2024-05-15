@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+
 from flask import request, g, session, send_file, abort, jsonify, redirect, render_template
 from flask_restful import Resource
 from functools import wraps
@@ -9,16 +8,6 @@ from config import app, db, api
 import os
 import stripe
 from datetime import datetime
-
-from flask_migrate import Migrate
-from flask_restful import Api
-from sqlalchemy import MetaData
-from flask_marshmallow import Marshmallow
-from flask_bcrypt import Bcrypt
-from flask_session import Session
-from os import environ
-import os
-import stripe
 # Models
 from models.user import User
 from models.pattern import Pattern
@@ -30,36 +19,6 @@ from schemas.user_schema import user_schema, users_schema
 from schemas.pattern_schema import pattern_schema, patterns_schema
 from schemas.purchase_schema import purchase_schema, purchases_schema
 from schemas.category_schema import category_schema, categories_schema
-
-from dotenv import load_dotenv
-
-# load_dotenv()
-
-# app = Flask(
-#     __name__,
-#     static_url_path='',
-#     static_folder='../client/build',
-#     template_folder='../client/build'
-# )
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///cozyknots.db")
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# app.secret_key = os.environ.get("SESSION_SECRET", "default_secret_key")
-# app.config["SESSION_TYPE"] = "sqlalchemy"
-
-# stripe_keys = {
-#     "secret_key": os.environ.get("STRIPE_SECRET_KEY"),
-#     "publishable_key": os.environ.get("STRIPE_PUBLISHABLE_KEY"),
-# }
-
-# db = SQLAlchemy(app)
-# app.config["SESSION_SQLALCHEMY"] = db
-# migrate = Migrate(app, db)
-# api = Api(app)
-# ma = Marshmallow(app)
-# session = Session(app)
-# flask_bcrypt = Bcrypt(app)
 
 # Views go here!
 
@@ -134,7 +93,7 @@ def current_user():
         else:
             return {"message": "Please log in"}, 400
     except Exception as e:
-        return {"error": str(e)}, 500
+        return {"error": str(e)}
 
 # #! ALL PATTERN RELATED ROUTES
 class Patterns(Resource):

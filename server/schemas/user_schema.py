@@ -33,11 +33,11 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
                         error_messages={"required": "Email is required.",
                                         "validate.Email": "Invalid email format."})
     password_hash = fields.String(data_key="password_hash", required=True, 
-                                validate=[validate.Length(min=8), validate.Regexp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$',
+                                validate=[validate.Length(min=8), validate.Regexp(r'^(?=.*\d)[A-Za-z\d]{8,}$',
                                                         error='Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.')], load_only=True,
                                 error_messages={"required": "Password is required.",
                                                 "validate.Length": "Password must be at least 8 characters long.", 
-                                                "validate.Regexp": "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."})
+                                                "validate.Regexp": "Password must be at least 8 characters long and contain at least one number."})
     avatar = fields.String()
 
 
