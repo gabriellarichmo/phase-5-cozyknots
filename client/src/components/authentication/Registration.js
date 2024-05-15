@@ -63,80 +63,84 @@ const Registration = () => {
   }, [navigate, setCurrentUser]);
 
   const formik = useFormik({
-  initialValues,
-  validationSchema: login ? signinSchema : signupSchema,
-  onSubmit: async (formData) => {
-    try {
-      const response = await fetch(requestedUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      console.log("Response data:", data);
-
-      if (response.ok) {
-        setCurrentUser(data);
-        navigate("/");
-        toast("Welcome to Cozy Knots Co.", {
-          icon: "🧶",
-        });
-      } else {
-        if (data.errors) {
-          for (const [key, value] of Object.entries(data.errors)) {
-            toast.error(`${key}: ${value}`);
-          }
-        } else {
-          toast.error(data.message || "An error occurred");
-        }
-      }
-    } catch (error) {
-      console.error("Error logging in:", error);
-      toast.error("Error logging in. Please try again later.");
-    }
-  },
-});
-
-
     initialValues,
     validationSchema: login ? signinSchema : signupSchema,
     onSubmit: async (formData) => {
+      try {
+        const response = await fetch(requestedUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: formData.username,
+            email: formData.email,
+            password_hash: formData.password, 
+          }),
+        });
 
-      fetch(requestedUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password_hash: formData.password,
-        }),
-      }).then((resp) => {
-        console.log("Login response:", resp);
-        if (resp.ok) {
-          resp
-            .json()
-            .then((user) => {
-              setCurrentUser(user);
-              navigate("/");
-              toast("Cozy Knots Co.", {
-                icon: "🧶",
-              });
-            });
+        const data = await response.json();
+        console.log("Response data:", data);
+
+        if (response.ok) {
+          setCurrentUser(data);
+          navigate("/");
+          toast("Welcome to Cozy Knots Co.", {
+            icon: "🧶",
+          });
         } else {
-          return resp.json().then((errorObj) => toast.error(errorObj.message || errorObj.error));
+          if (data.errors) {
+            for (const [key, value] of Object.entries(data.errors)) {
+              toast.error(`${key}: ${value}`);
+            }
+          } else {
+            toast.error(data.message || "An error occurred");
+          }
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error logging in:", error);
         toast.error("Error logging in. Please try again later.");
-      });
+      }
     },
   });
+
+
+  //   initialValues,
+  //   validationSchema: login ? signinSchema : signupSchema,
+  //   onSubmit: async (formData) => {
+
+  //     fetch(requestedUrl, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         username: formData.username,
+  //         email: formData.email,
+  //         password_hash: formData.password,
+  //       }),
+  //     }).then((resp) => {
+  //       console.log("Login response:", resp);
+  //       if (resp.ok) {
+  //         resp
+  //           .json()
+  //           .then((user) => {
+  //             setCurrentUser(user);
+  //             navigate("/");
+  //             toast("Cozy Knots Co.", {
+  //               icon: "🧶",
+  //             });
+  //           });
+  //       } else {
+  //         return resp.json().then((errorObj) => toast.error(errorObj.message || errorObj.error));
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error logging in:", error);
+  //       toast.error("Error logging in. Please try again later.");
+  //     });
+  //   },
+  // });
 
   return (
     <div className="registration-page">
