@@ -13,7 +13,7 @@ export const UserProvider = ({ children }) => {
     const fetchCurrentUser = async () => {
       try {
         const response = await fetch(
-          "https://cozyknots.onrender.com/current_user", {
+          "/current_user", {
             method: "GET",
             headers: {
               "Content-Type": "application/json"
@@ -37,7 +37,7 @@ export const UserProvider = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      await fetch("https://cozyknots.onrender.com/logout", {
+      await fetch("/logout", {
         method: "DELETE",
       });
       setCurrentUser(null);
@@ -51,7 +51,7 @@ export const UserProvider = ({ children }) => {
 
 //fix
   const handleDeleteUser = () => {
-    fetch(`https://cozyknots.onrender.com/users/${currentUser.id}`, {
+    fetch(`/users/${currentUser.id}`, {
       method: "DELETE",
     }).then(handleLogout);
   };

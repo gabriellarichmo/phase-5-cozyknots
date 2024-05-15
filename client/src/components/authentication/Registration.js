@@ -14,8 +14,8 @@ const signupSchema = object({
   password: string()
     .min(8, "Password must be at least 8 characters long")
     .matches(
-      /[a-zA-Z0-9]/,
-      "Passwords can only contain latin numbers and letters"
+      /^(?=.*\d)[a-zA-Z0-9]{8,}$/,
+      "Password must be at least 8 characters long and contain at least one number."
     )
     .required("Password is required"),
 });
@@ -27,8 +27,8 @@ const signinSchema = object({
   password: string()
     .min(8, "Password must be at least 8 characters long")
     .matches(
-      /[a-zA-Z0-9]/,
-      "Passwords can only contain latin numbers and letters"
+      /^(?=.*\d)[a-zA-Z0-9]{8,}$/,
+      "Password must be at least 8 characters long and contain at least one number."
     )
     .required("Password is required"),
 });
@@ -63,40 +63,42 @@ const Registration = () => {
   }, [navigate, setCurrentUser]);
 
   const formik = useFormik({
-  //   initialValues,
-  //   validationSchema: login ? signinSchema : signupSchema,
-  //   onSubmit: async (formData) => {
-  //     try {
-  //       const response = await fetch(requestedUrl, {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify(formData),
-  //       });
+  initialValues,
+  validationSchema: login ? signinSchema : signupSchema,
+  onSubmit: async (formData) => {
+    try {
+      const response = await fetch(requestedUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-  //       const data = await response.json();
-  //       if (response.ok) {
-  //         setCurrentUser(data);
-  //         navigate("/");
-  //         toast("Welcome to Cozy Knots Co.", {
-  //           icon: "🧶",
-  //         });
-  //       } else {
-  //         if (data.errors) {
-  //           for (const [key, value] of Object.entries(data.errors)) {
-  //             toast.error(`${key}: ${value}`);
-  //           }
-  //         } else {
-  //           toast.error(data.message || "An error occurred");
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error logging in:", error);
-  //       toast.error("Error logging in. Please try again later.");
-  //     }
-  //   },
-  // });
+      const data = await response.json();
+      console.log("Response data:", data);
+
+      if (response.ok) {
+        setCurrentUser(data);
+        navigate("/");
+        toast("Welcome to Cozy Knots Co.", {
+          icon: "🧶",
+        });
+      } else {
+        if (data.errors) {
+          for (const [key, value] of Object.entries(data.errors)) {
+            toast.error(`${key}: ${value}`);
+          }
+        } else {
+          toast.error(data.message || "An error occurred");
+        }
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      toast.error("Error logging in. Please try again later.");
+    }
+  },
+});
 
 
     initialValues,
